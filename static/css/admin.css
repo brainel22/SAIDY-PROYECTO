@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+:root {
+    --dark-gold-color: #B08B12;
+    /* Dorado oscuro, elegante */
+    --elegant-blue: #1B365D;
+    /* Azul elegante, un tono profundo y sereno */
+    --blueberry-cranberry: #4E4C7F;
+    /* Arándano azul, un tono azul oscuro con matices púrpuras */
+    --title-color: #FFFFFF;
+    /* Blanco para títulos */
+    --text-color: #1B365D;
+    /* Azul elegante para texto principal */
+    --text-color-light: #B08B12;
+    /* Dorado oscuro para textos secundarios y acentos */
+    --body-color: #FFFFFF;
+    /* Fondo del cuerpo en blanco */
+    --container-color: #E6EBF0;
+    /* Color de contenedor */
+    --font: "Josefin Sans", sans-serif;
+    --emerald-green: #50C878;
+    /* Verde esmeralda */
+    --dark-gold-color: #B08B12;
+    /* Dorado oscuro */
+}
+
+/* static/style.css */
+body {
+    font-family: var(--font);
+}
+
+h1 {
+    text-align: center;
+}
+
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid var(--dark-gold-color);
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+/* Estilos para el enlace de editar */
+.link-editar {
+    color: var(--container-color);
+    background-color: var(--elegant-blue);
+    /* Color azul para enlaces */
+    text-decoration: none;
+    /* Eliminar subrayado */
+    margin-right: 10px;
+    /* Margen a la derecha para separarlo del botón */
+    font-weight: bold;
+    /* Hacer el texto negrita */
+    border-radius: 1px; ;
+
+}
+
+.link-editar:hover {
+    text-decoration: underline;
+    /* Subrayar al pasar el ratón */
+}
+
+/* Estilos para el formulario y botón de eliminar */
+.form-eliminar {
+    display: inline;
+    /* Asegura que el formulario se muestre en línea con el enlace */
+}
+
+.btn-eliminar {
+    color: white;
+    /* Texto blanco */
+    background-color: var(--dark-gold-color);
+    /* Fondo rojo */
+    border: none;
+    /* Sin bordes */
+    padding: 5px 10px;
+    /* Relleno alrededor del texto */
+    cursor: pointer;
+    /* Cursor en forma de mano al pasar el ratón */
+    border-radius: 5px;
+    /* Bordes redondeados */
+    font-weight: bold;
+    /* Negrita */
+}
+
+.btn-eliminar:hover {
+    background-color: #C82333;
+    /* Color más oscuro al pasar el ratón */
+}
+
+
+img {
+    max-width: 100px;
+}
+
+.formulario {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.campo {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.boton {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.boton:hover {
+    background-color: #0056b3;
+}
+
+a{
+    color: var(--text-color-light);
+}
+
+a:hover{
+    color: var(--elegant-blue);
+}
+
+.alert {
+    padding: 10px;
+    background-color: var(--elegant-blue);
+    border: 1px solid var(--text-color-light);
+    color: var(--body-color);
+    margin-top: 20px;
+    border-radius: 5px;
+    font-family: var(--font);
+}
+
+.btn-close {
+    float: right;
+    cursor: pointer;
+    color: var(--dark-gold-color);
+}

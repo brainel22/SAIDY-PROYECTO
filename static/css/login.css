@@ -1,0 +1,263 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+:root {
+    /*========== Colors ==========*/
+        --dark-gold-color: #B08B12;
+        /* Oro oscuro, elegante */
+        --elegant-blue: #1B365D;
+        /* Azul elegante, un tono profundo y sereno */
+        --blueberry-cranberry: #4E4C7F;
+        /* Arándano azul, un tono azul oscuro con matices púrpuras */
+        --title-color: #FFFFFF;
+        /* Blanco para títulos */
+        --text-color: #1B365D;
+        /* Azul elegante para texto principal */
+        --text-color-light: #B08B12;
+        /* Oro oscuro para textos secundarios y acentos */
+        --body-color: #FFFFFF;
+        /* Fondo del cuerpo en blanco */
+        --container-color: #E6EBF0;
+    --font: "Josefin Sans", sans-serif
+}
+
+
+*{
+    outline: none;
+}
+
+body {
+    margin: 8px;
+    background-color: var(--elegant-blue);
+}
+
+body,
+input,
+button {
+    font-family: var(--font);
+}
+
+#cover {
+    width: 722px;
+    height: 522px;
+    padding: 45px;
+    margin: 0 auto;
+}
+
+#form-ui,
+form,
+#close-form {
+    position: relative;
+}
+
+form {
+    width: 262px;
+    height: 472px;
+    padding: 25px;
+    background-color: #fff;
+    box-shadow: 0px 15px 60px var(--container-color);
+    border-radius: 20px;
+}
+
+#close-form {
+    position: absolute;
+    top: 23px;
+    right: 25px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+#close-form:before,
+#close-form:after {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: 10px;
+    width: 5px;
+    height: 28px;
+    background-color: rgba(0, 0, 0, 0.06);
+    border-radius: 10px;
+}
+
+#close-form:before {
+    transform: rotateZ(-45deg);
+}
+
+#close-form:after {
+    transform: rotateZ(45deg);
+}
+
+#form-body {
+    position: absolute;
+    top: 50%;
+    right: 25px;
+    left: 25px;
+    width: 230px;
+    margin: -156px auto 0 auto;
+}
+
+#welcome-lines {
+    text-align: center;
+    line-height: 1;
+}
+
+#w-line-1 {
+    color: #7f7f7f;
+    font-size: 40px;
+}
+
+#w-line-2 {
+    color: #9c9c9c;
+    font-size: 28px;
+    margin-top: 17px;
+}
+
+#input-area {
+    margin-top: 40px;
+}
+
+/* Estilos para los campos de entrada */
+.f-inp {
+    padding: 11px 25px;
+    border: 1px solid var(--dark-gold-color);
+    line-height: 1;
+    border-radius: 20px;
+}
+
+/* Estilos cuando el campo de entrada está enfocado */
+.f-inp:focus {
+    border: 1px solid var(--blueberry-cranberry);
+    border-radius: 50px;
+    transition: border-radius 2s, border-color 2s;
+    /* Transición suave para los cambios */
+}
+.f-inp:first-child {
+    margin-bottom: 15px;
+}
+
+.f-inp input {
+    width: 100%;
+    font-size: 13.4px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+
+}
+
+.f-inp input::placeholder {
+    color: #b9b9b9;
+}
+
+#submit-button-cvr {
+    margin-top: 20px;
+}
+
+#submit-button {
+    display: block;
+    width: 100%;
+    color: black;
+    font-size: 14px;
+    margin: 0;
+    padding: 14px 13px 12px 13px;
+    border-color:var(--dark-gold-color);
+    background-color: var(--container-color);
+    border-radius: 25px;
+    line-height: 1;  
+    cursor: pointer;
+}
+
+#submit-button:hover{
+    background-color: var(--first-color-light);
+    transition: 1s;
+    color: black;
+}
+
+#forgot-pass {
+    text-align: center;
+    margin-top: 10px;
+}
+
+#forgot-pass a {
+    color: #868686;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+#bar {
+    position: absolute;
+    left: 50%;
+    bottom: -50px;
+    width: 28px;
+    height: 8px;
+    margin-left: -33px;
+    background-color: #dfdfdf;
+    border-radius: 10px;
+}
+
+#bar:before,
+#bar:after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: #ececec;
+    border-radius: 50%;
+}
+
+#bar:before {
+    right: -20px;
+}
+
+#bar:after {
+    right: -38px;
+}
+
+#img-box {
+    position: absolute;
+    top: 50%;
+    left: 312px;
+    width: 400px;
+    height: 475px;
+    margin-top: -237.5px;
+    padding-right: 16px;
+    background-color: var(--elegant-blue);
+    border-radius: 0 20px 20px 0;
+    overflow: hidden;
+}
+
+#img-box img {
+    display: block;
+}
+
+img{
+    margin-top: 50px;
+    width: 375px;
+    height: 375px;
+}
+
+.alert {
+            padding: 10px;
+            background-color: var(--first-color-light);
+            border: 1px solid var(--text-color-light);
+            color: var(--body-color);
+            margin-top: 20px;
+            border-radius: 5px;
+            font-family: var(--font);
+        }
+
+.btn-close {
+            float: right;
+            cursor: pointer;
+            color: #333;
+        }
+
+
+#show-password {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #ccc;
+}

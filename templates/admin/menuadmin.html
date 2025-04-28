@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Datos</title>
+    <link rel="stylesheet" href="{{url_for ('static',filename = 'css/menu_admin.css')}}">
+
+    <!--========== BOX ICONS ==========-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+</head>
+<!--========== HEADER ==========-->
+
+
+<header class="header">
+    <div class="header__container">
+        <img src="{{url_for('static',filename='img/Boolings Reserves.png')}}" alt="" class="header__img">
+
+        <a href="#" class="header__logo">Boolings Reserves</a>
+        <form action="{{url_for('search_admin')}}" method="get">
+            <div class="header__search">
+                <input type="search" name="query" placeholder="Search" class="header__input">
+                <i class='bx bx-search header__icon'></i>
+            </div>
+        </form>
+        <div class="header__toggle">
+            <i class='bx bx-menu' id="header-toggle"></i>
+        </div>
+    </div>
+</header>
+<form action="/menu_admin" method="post">
+    <!--========== NAV ==========-->
+    <div class="nav" id="navbar">
+        <nav class="nav__container">
+            <div>
+                <a href="#" class="nav__link nav__logo">
+                    <i class='bx bxs-disc nav__icon'></i>
+                    <span class="nav__logo-name">Boolings Reserves</span>
+                </a>
+
+                <div class="nav__list">
+                    <div class="nav__items">
+                        <h3 class="nav__subtitle">Admin</h3>
+
+                        <a href="{{url_for('menu_admin')}}" class="nav__link active">
+                            <i class='bx bx-home nav__icon'></i>
+                            <span class="nav__name">Home</span>
+                        </a>
+
+                        <div class="nav__dropdown">
+                            <a href="#" class="nav__link">
+                                <i class='bx bx-layer nav__icon'></i>
+                                <span class="nav__name">Listas</span>
+                                <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                            </a>
+                        
+                            <div class="nav__dropdown-collapse">
+                                <div class="nav__dropdown-content">
+                                    <a href="{{url_for('reservas')}}" class="nav__dropdown-item">Lista Reservas</a>
+                                    <a href="{{url_for('index')}}" class="nav__dropdown-item">Lista Usuarios</a>
+                                    <a href="{{url_for('evento')}}" class="nav__dropdown-item">Lista Eventos</a>
+                                </div>
+                            </div>
+                        
+                        </div>
+
+                <div class="nav__list">
+                    <div class="nav__items">
+                        <h3 class="nav__subtitle">Reportes</h3>
+                            <a href="{{url_for('facturas')}}" class="nav__link">
+                                <i class='bx bx-file nav__icon'></i>
+                                <span class="nav__name">Facturas</span>
+                            </a>
+                    </div>
+                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{{url_for('logout')}}" class="nav__link nav__logout">
+                    <i class='bx bx-log-out nav__icon'></i>
+                    <span class="nav__name">Log Out</span>
+                </a>
+        </nav>
+    </div>
+
+
+    <!--========== CONTENTS ==========-->
+    <section class="hero">
+        <h2 class="inicio">Bienvenido Admin </h2>
+        <p>Bienvenido a nuestra pagina web </p>
+    </section>

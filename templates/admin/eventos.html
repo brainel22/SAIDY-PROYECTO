@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename = 'css/menu_admin.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+
+    <!-- Agrega tus estilos CSS aquí -->
+    <style>
+:root{
+    /*========== Colors ==========*/
+        --dark-gold-color: #B08B12;
+        /* Oro oscuro, elegante */
+        --elegant-blue: #1B365D;
+        /* Azul elegante, un tono profundo y sereno */
+        --blueberry-cranberry: #4E4C7F;
+        /* Arándano azul, un tono azul oscuro con matices púrpuras */
+        --title-color: #FFFFFF;
+        /* Blanco para títulos */
+        --text-color: #1B365D;
+        /* Azul elegante para texto principal */
+        --text-color-light: #B08B12;
+        /* Oro oscuro para textos secundarios y acentos */
+        --body-color: #FFFFFF;
+        /* Fondo del cuerpo en blanco */
+        --container-color: #E6EBF0;
+    --font: "Josefin Sans", sans-serif
+}
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+            font-family: var(--font);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            font-family: var(--font);
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--dark-gold-color);
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+img {
+    max-width: 100px;
+}
+/* Estilos para el enlace de editar */
+.link-editar {
+    color: var(--elegant-blue);
+    /* Color azul para enlaces */
+    text-decoration: none;
+    /* Eliminar subrayado */
+    margin-right: 10px;
+    /* Margen a la derecha para separarlo del botón */
+    font-weight: bold;
+    /* Hacer el texto negrita */
+}
+
+.link-editar:hover {
+    text-decoration: underline;
+    /* Subrayar al pasar el ratón */
+}
+
+/* Estilos para el formulario y botón de eliminar */
+.form-eliminar {
+    display: inline;
+    /* Asegura que el formulario se muestre en línea con el enlace */
+}
+
+.btn-eliminar {
+    color: white;
+    /* Texto blanco */
+    background-color: var(--dark-gold-color);
+    /* Fondo rojo */
+    border: none;
+    /* Sin bordes */
+    padding: 5px 10px;
+    /* Relleno alrededor del texto */
+    cursor: pointer;
+    /* Cursor en forma de mano al pasar el ratón */
+    border-radius: 5px;
+    /* Bordes redondeados */
+    font-weight: bold;
+    /* Negrita */
+}
+
+.btn-eliminar:hover {
+    background-color: #C82333;
+    /* Color más oscuro al pasar el ratón */
+}
+
+        /* Estilos para los modales */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header__container">
+            <img src="{{url_for('static',filename='img/Boolings Reserves.png')}}" alt="" class="header__img">
+
+            <a href="#" class="header__logo">Boolings Reserves</a>
+            <form action="#" method="get">
+                <div class="header__search">
+<input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Buscar por nombre...">
+                    <i class='bx bx-search header__icon'></i>
+                </div>
+            </form>
+            <div class="header__toggle">
+                <i class='bx bx-menu' id="header-toggle"></i>
+            </div>
+        </div>
+    </header>
+    <!--========== NAV ==========-->
+    <div class="nav" id="navbar">
+        <nav class="nav__container">
+            <div>
+                <a href="#" class="nav__link nav__logo">
+                    <i class='bx bxs-disc nav__icon'></i>
+                    <span class="nav__logo-name">Boolings Reserves</span>
+                </a>
+
+                <div class="nav__list">
+                    <div class="nav__items">
+                        <h3 class="nav__subtitle">Admin</h3>
+
+                        <a href="{{url_for('menu_admin')}}" class="nav__link active">
+                            <i class='bx bx-home nav__icon'></i>
+                            <span class="nav__name">Home</span>
+                        </a>
+
+                        <div class="nav__dropdown">
+                            <a href="#" class="nav__link">
+                                <i class='bx bx-layer nav__icon'></i>
+                                <span class="nav__name">Listas</span>
+                                <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                            </a>
+
+                            <div class="nav__dropdown-collapse">
+                                <div class="nav__dropdown-content">
+                                    <a href="{{url_for('reservas')}}" class="nav__dropdown-item">Lista Reservas</a>
+                                    <a href="{{url_for('index')}}" class="nav__dropdown-item">Lista Usuarios</a>
+                                    <a href="{{url_for('evento')}}" class="nav__dropdown-item">Lista Eventos</a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="nav__list">
+                            <div class="nav__items">
+                                <h3 class="nav__subtitle">Reportes</h3>
+                                <a href="{{url_for('facturas')}}" class="nav__link">
+                                    <i class='bx bx-file nav__icon'></i>
+                                    <span class="nav__name">Reportes</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="{{url_for('logout')}}" class="nav__link nav__logout">
+                <i class='bx bx-log-out nav__icon'></i>
+                <span class="nav__name">Log Out</span>
+            </a>
+        </nav>
+    </div>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert">
+    <span class="btn-close" onclick="this.parentElement.style.display='none';">&times;</span>
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+    <h1>Eventos</h1>
+
+
+    <!-- Modal para agregar usuario -->
+    <div id="addUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addUserModal')">&times;</span>
+            <h2>Agregar Evento</h2>
+    <form action="{{ url_for('add_events') }}" method="post">
+    
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" name="name"><br>
+    
+        <label for="event_date">Fecha:</label>
+        <input type="date" id="event_date" name="event_date"><br>
+    
+        <label for="event_hour">Hora:</label>
+        <input type="time" id="event_hour" name="event_hour"><br>
+    
+        <label for="place">Lugar:</label>
+        <input type="text" id="place" name="place"><br>
+    
+        <label for="price">Precio:</label>
+        <input type="number" id="price" name="price"><br>
+    
+        <label for="price">Categoria:</label>
+        <input type="text" id="category" name="category"><br>
+    
+        <label for="reservation_status">Estado:</label>
+        <select id="reservation_status" name="reservation_status">
+            <option value="Reservado">Reservado</option>
+            <option value="Disponible">Disponible</option>
+        </select><br>
+    
+        <label for="image">Imagen:</label>
+        <input type="file" id="image" name="image"><br>
+    
+        <button type="submit">Guardar Cambios</button>
+    </form>
+        </div>
+    </div>
+    <center> <button onclick="openModal('addUserModal')">Agregar Evento</button>
+    </center>
+    <!-- Lista de usuarios -->
+<a href="{{ url_for('ver_pdf_eventos') }}" target="_blank">Descargar Reporte PDF</a>
+
+<div id="userTableContainer">
+    <table id="userTable">    
+      <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Lugar</th>
+            <th>Precio</th>
+            <th>Operación</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for dato in eventos %}
+        <tr>
+            <td>{{ dato.name }}</td>
+            <td>{{ dato.event_date }}</td>
+            <td>{{ dato.event_hour }}</td>
+            <td>{{ dato.place }}</td>
+            <td>{{ dato.price }}</td>
+            <td>
+                <button onclick="openModal('editUserModal{{ dato.id }}')">Editar</button>
+                <form action="/delete/{{ dato.id }}" method="post" class="form-eliminar" style="display: inline;">
+                    <button type="submit" class="btn-eliminar">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+
+        <!-- Modal para editar usuario -->
+        <div id="editUserModal{{ dato.id }}" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('editUserModal{{ dato.id }}')">&times;</span>
+<div class="container">
+    <h1>Editar Evento</h1>
+    <form action="{{ url_for('edit', id=dato.id) }}" method="post" enctype="multipart/form-data" class="edit-form">
+        <div class="form-group">
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" name="name" value="{{ dato.name }}">
+        </div>
+        <div class="form-group">
+            <label for="event_date">Fecha:</label>
+            <input type="date" id="event_date" name="event_date" value="{{ dato.event_date }}">
+        </div>
+        <div class="form-group">
+            <label for="event_hour">Hora:</label>
+            <input type="time" id="event_hour" name="event_hour" value="{{ dato.event_hour }}">
+        </div>
+        <div class="form-group">
+            <label for="place">Lugar:</label>
+            <input type="text" id="place" name="place" value="{{ dato.place }}">
+        </div>
+        <div class="form-group">
+            <label for="price">Precio:</label>
+            <input type="text" id="price" name="price" value="{{ dato.price }}">
+        </div>
+
+        <div class="form-group">
+            <label for="price">Categoria:</label>
+            <input type="text" id="category" name="category" value="{{ dato.category }}">
+        </div>
+        <div class="form-group">
+            <label for="reservation_status">Estado:</label>
+            <select id="reservation_status" name="reservation_status">
+                <option value="Reservado" {% if dato.reservation_status=='Reservado' %} selected {% endif %}>Reservado
+                </option>
+                <option value="Disponible" {% if dato.reservation_status=='Disponible' %} selected {% endif %}>
+                    Disponible</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="image">Imagen:</label>
+            <input type="file" id="image" name="image">
+            {% if dato.image_url %}
+            <img src="{{ dato.image_url }}" alt="Imagen actual" class="current-image">
+            {% endif %}
+        </div>
+        <div class="button-group">
+            <button type="submit" class="btn-save">Guardar Cambios</button><br><br>
+        </div>
+    </form>
+</div>
+            </div>
+        </div>
+        {% endfor %}
+    </table>
+</div>
+
+
+    <!-- Agrega tus scripts JavaScript aquí -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5+1V+56izL5qge6G2Va/cr4K/xYm8ycuTE1Pi6jG"
+        crossorigin="anonymous"></script>
+
+    <script>
+        // Función para abrir un modal
+        function openModal(modalId) {
+            var modal = document.getElementById(modalId);
+            modal.style.display = "block";
+        }
+
+        // Función para cerrar un modal
+        function closeModal(modalId) {
+            var modal = document.getElementById(modalId);
+            modal.style.display = "none";
+        }
+
+        
+            function searchTable() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("searchInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("userTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[1]; // Cambia el índice si quieres buscar en otra columna
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+    </script>
+</body>
+
+</html>

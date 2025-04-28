@@ -1,0 +1,309 @@
+2025-02-02 21:06:43,801 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-02-02 21:06:43,801 - [33mPress CTRL+C to quit[0m
+2025-02-02 21:06:43,814 -  * Restarting with stat
+2025-02-02 21:06:45,414 -  * Debugger is active!
+2025-02-02 21:06:45,418 -  * Debugger PIN: 102-397-731
+2025-02-02 21:07:05,006 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:07:05 -04)" (scheduled at 2025-02-02 21:07:05-04:00)
+2025-02-02 21:07:05,011 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:08:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:07:05,011 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:08:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:08:05,003 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:09:05 -04)" (scheduled at 2025-02-02 21:08:05-04:00)
+2025-02-02 21:08:05,003 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:09:05 -04)" (scheduled at 2025-02-02 21:08:05-04:00)
+2025-02-02 21:08:05,005 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:09:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:09:05,005 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:10:05 -04)" (scheduled at 2025-02-02 21:09:05-04:00)
+2025-02-02 21:09:05,005 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:10:05 -04)" (scheduled at 2025-02-02 21:09:05-04:00)
+2025-02-02 21:09:05,007 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:10:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:09:05,008 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:10:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:10:05,015 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:11:05 -04)" (scheduled at 2025-02-02 21:10:05-04:00)
+2025-02-02 21:10:05,017 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:11:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:10:05,017 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:11:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:11:05,000 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:12:05 -04)" (scheduled at 2025-02-02 21:11:05-04:00)
+2025-02-02 21:11:05,002 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:12:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:11:05,002 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:12:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:12:05,012 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:13:05 -04)" (scheduled at 2025-02-02 21:12:05-04:00)
+2025-02-02 21:12:05,015 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:13:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:12:05,015 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:13:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:12:34,315 -  * Detected change in 'c:\\Users\\Hp\\Downloads\\Braynel_22\\appnewport.py', reloading
+2025-02-02 21:12:34,627 -  * Restarting with stat
+2025-02-02 21:12:41,970 -  * Restarting with stat
+2025-02-02 21:12:44,065 -  * Debugger is active!
+2025-02-02 21:12:44,070 -  * Debugger PIN: 102-397-731
+2025-02-02 21:12:50,536 -  * Detected change in 'c:\\Users\\Hp\\Downloads\\Braynel_22\\appnewport.py', reloading
+2025-02-02 21:12:50,708 -  * Restarting with stat
+2025-02-02 21:12:52,468 -  * Debugger is active!
+2025-02-02 21:12:52,474 -  * Debugger PIN: 102-397-731
+2025-02-02 21:12:54,728 -  * Detected change in 'c:\\Users\\Hp\\Downloads\\Braynel_22\\appnewport.py', reloading
+2025-02-02 21:12:54,925 -  * Restarting with stat
+2025-02-02 21:12:56,986 -  * Debugger is active!
+2025-02-02 21:12:56,990 -  * Debugger PIN: 102-397-731
+2025-02-02 21:13:02,468 -  * Detected change in 'c:\\Users\\Hp\\Downloads\\Braynel_22\\appnewport.py', reloading
+2025-02-02 21:13:02,647 -  * Restarting with stat
+2025-02-02 21:13:04,257 -  * Debugger is active!
+2025-02-02 21:13:04,260 -  * Debugger PIN: 102-397-731
+2025-02-02 21:13:05,005 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:14:05 -04)" (scheduled at 2025-02-02 21:13:05-04:00)
+2025-02-02 21:13:05,007 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:13:05 -04)" (scheduled at 2025-02-02 21:13:05-04:00)
+2025-02-02 21:13:05,010 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:14:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:13:05,012 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:14:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:13:05,444 -  * Detected change in 'c:\\Users\\Hp\\Downloads\\Braynel_22\\appnewport.py', reloading
+2025-02-02 21:13:05,645 -  * Restarting with stat
+2025-02-02 21:13:07,797 -  * Debugger is active!
+2025-02-02 21:13:07,801 -  * Debugger PIN: 102-397-731
+2025-02-02 21:13:15,947 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-02-02 21:13:15,947 - [33mPress CTRL+C to quit[0m
+2025-02-02 21:13:15,949 -  * Restarting with stat
+2025-02-02 21:13:17,638 -  * Debugger is active!
+2025-02-02 21:13:17,642 -  * Debugger PIN: 102-397-731
+2025-02-02 21:14:05,012 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:14:05 -04)" (scheduled at 2025-02-02 21:14:05-04:00)
+2025-02-02 21:14:05,012 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:14:05 -04)" (scheduled at 2025-02-02 21:14:05-04:00)
+2025-02-02 21:14:05,016 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:15:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:14:05,016 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:15:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:15:05,000 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:16:05 -04)" (scheduled at 2025-02-02 21:15:05-04:00)
+2025-02-02 21:15:05,000 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:16:05 -04)" (scheduled at 2025-02-02 21:15:05-04:00)
+2025-02-02 21:15:05,002 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:16:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:15:05,003 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:16:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:15:49,596 -  * Detected change in 'c:\\Users\\Hp\\Downloads\\Braynel_22\\appnewport.py', reloading
+2025-02-02 21:15:49,844 -  * Restarting with stat
+2025-02-02 21:15:52,114 -  * Debugger is active!
+2025-02-02 21:15:52,119 -  * Debugger PIN: 102-397-731
+2025-02-02 21:15:53,328 -  * Detected change in 'c:\\Users\\Hp\\Downloads\\Braynel_22\\appnewport.py', reloading
+2025-02-02 21:15:53,549 -  * Restarting with stat
+2025-02-02 21:15:56,910 -  * Restarting with stat
+2025-02-02 21:15:58,794 -  * Debugger is active!
+2025-02-02 21:15:58,798 -  * Debugger PIN: 102-397-731
+2025-02-02 21:16:05,014 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:17:05 -04)" (scheduled at 2025-02-02 21:16:05-04:00)
+2025-02-02 21:16:05,015 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:16:05 -04)" (scheduled at 2025-02-02 21:16:05-04:00)
+2025-02-02 21:16:05,018 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:17:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:16:05,019 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:17:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:17:05,010 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:18:05 -04)" (scheduled at 2025-02-02 21:17:05-04:00)
+2025-02-02 21:17:05,012 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:18:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:17:05,013 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:18:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:18:05,010 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:19:05 -04)" (scheduled at 2025-02-02 21:18:05-04:00)
+2025-02-02 21:18:05,012 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:19:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:18:05,013 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:19:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:19:05,015 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:20:05 -04)" (scheduled at 2025-02-02 21:19:05-04:00)
+2025-02-02 21:19:05,018 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:20:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:20:05,009 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:21:05 -04)" (scheduled at 2025-02-02 21:20:05-04:00)
+2025-02-02 21:20:05,009 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:21:05 -04)" (scheduled at 2025-02-02 21:20:05-04:00)
+2025-02-02 21:20:05,011 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:21:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:20:05,012 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:21:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:21:05,007 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:22:05 -04)" (scheduled at 2025-02-02 21:21:05-04:00)
+2025-02-02 21:21:05,007 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:22:05 -04)" (scheduled at 2025-02-02 21:21:05-04:00)
+2025-02-02 21:21:05,009 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:22:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:21:05,009 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:22:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:22:05,005 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:23:05 -04)" (scheduled at 2025-02-02 21:22:05-04:00)
+2025-02-02 21:22:05,005 - Running job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:23:05 -04)" (scheduled at 2025-02-02 21:22:05-04:00)
+2025-02-02 21:22:05,007 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:23:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:22:05,007 - Job "notify_job (trigger: cron[minute='*', second='5'], next run at: 2025-02-02 21:23:05 -04)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Hp\Downloads\Braynel_22\venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "c:\Users\Hp\Downloads\Braynel_22\appnewport.py", line 112, in notify_job
+    cursor.close()
+    ^^^^^^
+UnboundLocalError: cannot access local variable 'cursor' where it is not associated with a value
+2025-02-02 21:22:15,228 -  * Debugger is active!
+2025-02-02 21:22:15,228 -  * Debugger PIN: 102-397-731

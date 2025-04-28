@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Restablecer Contraseña</title>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+        :root {
+            /*========== Colors ==========*/
+            --dark-gold-color: #B08B12;
+            /* Oro oscuro, elegante */
+            --elegant-blue: #1B365D;
+            /* Azul elegante, un tono profundo y sereno */
+            --blueberry-cranberry: #4E4C7F;
+            /* Arándano azul, un tono azul oscuro con matices púrpuras */
+            --title-color: #FFFFFF;
+            /* Blanco para títulos */
+            --text-color: #1B365D;
+            /* Azul elegante para texto principal */
+            --text-color-light: #B08B12;
+            /* Oro oscuro para textos secundarios y acentos */
+            --body-color: #FFFFFF;
+            /* Fondo del cuerpo en blanco */
+            --container-color: #E6EBF0;
+            /* Color de contenedor en un tono claro y neutro */
+    --font: "Josefin Sans", sans-serif
+
+        }
+
+        body {
+            font-family:var(--font);
+            background-color: var(--container-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        form {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 350px;
+        }
+
+        h1,
+        h3 {
+            text-align: center;
+            color: var(--elegant-blue);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            margin: 20px 0 10px;
+            font-size: 18px;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+            border: 2px solid var(--dark-gold-color);
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="email"]:focus {
+            border-color: #4caf50;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border-color: 5px solid var(--dark-gold-color);
+            background-color: var(--elegant-blue);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--text-color);
+        }
+
+        .alert {
+            padding: 10px;
+            background-color: #ffdddd;
+            border: 1px solid #ffcccc;
+            color: #d8000c;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .btn-close {
+            float: right;
+            cursor: pointer;
+            color: #333;
+        }
+
+        a{
+            text-decoration: none;
+            color: var(--elegant-blue);
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <form method="POST">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert">
+            <span class="btn-close" onclick="this.parentElement.style.display='none';">&times;</span>
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <h1>Restablecer tu contraseña</h1>
+        <h3>Email:</h3>
+        <input type="email" name="email" required>
+        <button type="submit">Enviar correo de recuperación</button><br><br>
+        <a href="{{url_for('access_login')}}">Cancelar</a>
+    </form>
+</body>
+
+</html>

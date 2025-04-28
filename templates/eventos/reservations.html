@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Evento</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/reservation.css')}}">
+</head>
+<body>
+{% if error %}
+    <div>{{ error }}</div>
+{% endif %}
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+<form action="{{ url_for('reservar_evento', id=dato.id) }}" method="post">
+    <h1>Haz tu reserva</h1>
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required><br><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+    <label for="tickets">Número de Tickets:</label>
+    <input type="number" id="tickets" name="tickets" required><br><br>
+    <label for="date">Fecha:</label>
+    <input type="date" id="date" name="date" value="{{dato.event_date}}" required><br><br>
+    <h3>Pasarela de pago</h3>
+    <input type="hidden" name="id" value="{{ id }}">
+    <label for="amount_paid">Monto a Pagar:</label>
+    <input type="number" value="{{dato.price}}" id="amount_paid" name="amount_paid" required><br><br>
+    <label for="payment_date">Fecha de Pago:</label>
+    <input type="date" id="payment_date" name="payment_date" placeholder="D/M/Y" required><br><br>
+    <label for="card_number">Número de Tarjeta:</label>
+    <input type="text" id="card_number" name="card_number" placeholder="1234 5678 9012 3456" required><br><br>
+    <label for="card_holder">Titular de la Tarjeta:</label>
+    <input type="text" id="card_holder" name="card_holder" required><br><br>
+    <label for="card_expiry">Fecha de Expiración:</label>
+    <input type="date" id="card_expiry" name="card_expiry" required><br><br>
+    <label for="card_cvv">CVV:</label>
+    <input type="text" id="card_cvv" name="card_cvv" placeholder="CVV" required><br><br>  
+    <button type="submit">Pagar</button>
+    <a href="{{url_for('eventos_disponibles')}}">Regresar</a>
+
+
+  
+</form>
+<script>
+    // Función para abrir el modal
+    function openModal() {
+        document.getElementById('myModal').style.display = 'block';
+    }
+
+    // Función para cerrar el modal
+    function closeModal() {
+        document.getElementById('myModal').style.display = 'none';
+    }
+
+    // Cerrar el modal haciendo clic fuera del contenido
+    window.onclick = function (event) {
+        var modal = document.getElementById('myModal');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
+</body>
+</html>

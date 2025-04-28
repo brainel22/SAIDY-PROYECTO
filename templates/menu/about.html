@@ -1,0 +1,169 @@
+
+<head>
+    <link rel="stylesheet" href="{{url_for ('static',filename = 'css/us.css')}}">
+    
+
+    <link rel="stylesheet" href="{{url_for ('static',filename = 'css/menu2.css')}}">    
+    <!--========== BOX ICONS ==========-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    
+    <!--========== CSS ==========-->
+    <title>Boolings Reserves</title>
+    </head>
+    
+    <body>
+        <!--========== HEADER ==========-->
+        <header class="header">
+            <div class="header__container">
+                <img src="{{url_for('static',filename='img/Boolings Reserves.png')}}" alt="" class="header__img">
+    
+                <a href="#" class="header__logo">Boolings Reserves</a>
+                <form action="{{url_for('buscar')}}" method="get">
+                    <div class="header__search">
+                        <input type="search" placeholder="Search" name="query" class="header__input">
+                        <i class='bx bx-search header__icon'></i>
+                    </div>
+                </form>
+                <div class="header__toggle">
+                    <i class='bx bx-menu' id="header-toggle"></i>
+                </div>
+            </div>
+        </header>
+        <form action="/menu" method="post">
+            <!--========== NAV ==========-->
+            <div class="nav" id="navbar">
+                <nav class="nav__container">
+                    <div>
+                        <a href="#" class="nav__link nav__logo">
+                            <i class='bx bxs-disc nav__icon'></i>
+                            <span class="nav__logo-name">Boolings Reserves</span>
+                        </a>
+    
+                        <div class="nav__list">
+                            <div class="nav__items">
+                                <h3 class="nav__subtitle">Profile</h3>
+    
+                                <a href="{{url_for('menu')}}" class="nav__link active">
+                                    <i class='bx bx-home nav__icon'></i>
+                                    <span class="nav__name">Home</span>
+                                </a>
+    
+                                <a href="{{url_for('about')}}" class="nav__link">
+                                    <i class='bx bx-layer nav__icon'></i>
+                                    <span class="nav__name">About Us</span>
+                                </a>
+    
+    
+    
+                                <a href="{{url_for('perfil')}}" class="nav__link">
+                                    <i class='bx bx-user nav__icon'></i>
+                                    <span class="nav__name">Perfil</span>
+                                </a>
+                        <a href="{{url_for('contact')}}" class="nav__link">
+                            <i class='bx bx-comment nav__icon'></i>
+                            <span class="nav__name">Contacto</span>
+                        </a>
+                        <div class="nav__items">
+                            <h3 class="nav__subtitle">Eventos</h3>
+                            <div class="nav__dropdown">
+                                <a href="{{url_for('eventos_disponibles')}}" class="nav__link">
+                                    <i class='bx bx-calendar nav__icon'></i>
+                                    <span class="nav__name">Eventos Disponibles</span>
+                                    <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                                </a>
+                        
+                                <div class="nav__dropdown-collapse">
+                                    <div class="nav__dropdown-content">
+                                        <a href="{{url_for('concierto')}}" class="nav__dropdown-item">Musica y Concierto</a>
+                                        <a href="{{url_for('arte_cultura')}}" class="nav__dropdown-item">Arte y Cultura</a>
+                                        <a href="{{url_for('festivales')}}" class="nav__dropdown-item">Festivales</a>
+                                        <a href="{{url_for('talleres')}}" class="nav__dropdown-item">Cursos y talleres</a>
+                                        <a href="{{url_for('conferencia')}}" class="nav__dropdown-item">Conferencias</a>
+                        
+                                    </div>
+                                </div>
+                        
+                            </div>
+                                    <a href="#" class="nav__link">
+                                        <i class='bx bx-compass nav__icon'></i>
+                                        <span class="nav__name">Explore</span>
+                                    </a>
+                        <a href="{{url_for('safe')}}" class="nav__link">
+                            <i class='bx bx-bookmark nav__icon'></i>
+                            <span class="nav__name">Saved</span>
+                        </a>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <a href="{{url_for('logout')}}" class="nav__link nav__logout">
+                            <i class='bx bx-log-out nav__icon'></i>
+                            <span class="nav__name">Log Out</span>
+                        </a>
+                </nav>
+            </div>
+<script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+
+        <section id="nosotros">
+            <div class="title-cards">
+                <h1>Sobre Nosotros</h1>
+            </div>
+            <div class="card">
+                <div class="contenido-card">
+                    <h3>Historia</h3>
+                    <p>Con una misión clara y una determinación inquebrantable, el equipo de Boolings Reserves se embarca en la creación de una
+                    plataforma revolucionaria que cambia la forma en que las personas encuentran y reservan eventos. Inspirados por su
+                    visión de hacer que la planificación de eventos sea accesible para todos, desde fiestas de cumpleaños hasta conferencias
+                    empresariales, Braynel y su equipo se sumergen en el desarrollo de una interfaz intuitiva y fácil de usar que permite a
+                    los usuarios explorar una amplia gama de opciones y reservar el evento perfecto con solo unos pocos clics.
+.</p>
+                    <br>
+                    <p>Boolings Reserves se convierte rápidamente en el destino preferido para aquellos que buscan celebrar momentos especiales
+                    de una manera única y memorable. Colaborando con una red diversa de proveedores, desde salones de eventos hasta músicos
+                    y chefs, Boolings Reserves ofrece una variedad infinita de opciones para cualquier ocasión, desde bodas íntimas hasta
+                    lanzamientos de productos.</p>
+                    <br>
+                    <p>A medida que Boolings Reserves crece, también lo hace su impacto en la comunidad. La plataforma se convierte en un motor
+                    de crecimiento para la escena cultural local, apoyando a artistas emergentes, promoviendo eventos benéficos y
+                    colaborando con organizaciones sin fines de lucro para llevar el arte y la cultura a comunidades desatendidas.</p>
+                    <br>
+                    <p>Hoy en día, Boolings Reserves continúa siendo el destino preferido para aquellos que buscan experiencias auténticas y
+                    memorables en la ciudad. Su historia es un testimonio del poder de la pasión, la creatividad y la determinación para
+                    transformar una visión en realidad y hacer del mundo un lugar más vibrante y emocionante para todos.
+</p>
+                </div>
+            </div>
+            <div class="container-card">
+                <div class="card">
+                    <div class="contenido-card">
+                        <h3>Mision</h3>
+                        <p>La mision de esta empresa es el llegar a hacer de las empresas de gestion de reservas mas
+                            grandes del pais y que toda la
+                            gente se sienta comoda y segura al hacer una reserva.</p>
+                        <!-- <h3>Historia</h3> 
+                    <p>Boolings Reserves surgio a partir de una idea de un chico que queria mejorar y revolucionar el como se hacen las reservas. Creo el sistema de reservas online en el cual los clientes pueden hacer sus reservas sin necesidad de salir de sus hogares.🐰</p>-->
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="contenido-card">
+                        <h3>Vision</h3>
+                        <p>La vision es llegar a ser la mejor aplicacion web de gestion de reservas y mejorar cada dia
+                            mejorar la calidad al hacer reservas online y la seguidad de lo que se reserve. </p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="contenido-card">
+                        <h3>Valores</h3>
+                            <ul>
+                                <li>Respeto</li>
+                                <li>Amabilidad</li>
+                                <li>Eficiencia</li>
+                                <li>Puntualidad</li>
+                                <li>Lealtad</li>
+                                <li>Honestidad</li>
+                            </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{url_for ('static',filename = 'css/menu_admin.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+
+    <!-- Agrega tus estilos CSS aquí -->
+    <style>
+        /* Estilos para los modales */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header__container">
+            <img src="{{url_for('static',filename='img/Boolings Reserves.png')}}" alt="" class="header__img">
+
+            <a href="#" class="header__logo">Boolings Reserves</a>
+            <form action="{{url_for('search_admin')}}" method="get">
+                <div class="header__search">
+                    <input type="search" name="query" placeholder="Search" class="header__input">
+                    <i class='bx bx-search header__icon'></i>
+                </div>
+            </form>
+            <div class="header__toggle">
+                <i class='bx bx-menu' id="header-toggle"></i>
+            </div>
+        </div>
+    </header>
+    <!--========== NAV ==========-->
+    <div class="nav" id="navbar">
+        <nav class="nav__container">
+            <div>
+                <a href="#" class="nav__link nav__logo">
+                    <i class='bx bxs-disc nav__icon'></i>
+                    <span class="nav__logo-name">Boolings Reserves</span>
+                </a>
+
+                <div class="nav__list">
+                    <div class="nav__items">
+                        <h3 class="nav__subtitle">Admin</h3>
+
+                        <a href="{{url_for('menu_admin')}}" class="nav__link active">
+                            <i class='bx bx-home nav__icon'></i>
+                            <span class="nav__name">Home</span>
+                        </a>
+
+                        <div class="nav__dropdown">
+                            <a href="#" class="nav__link">
+                                <i class='bx bx-layer nav__icon'></i>
+                                <span class="nav__name">Listas</span>
+                                <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                            </a>
+
+                            <div class="nav__dropdown-collapse">
+                                <div class="nav__dropdown-content">
+                                    <a href="{{url_for('reservas')}}" class="nav__dropdown-item">Lista Reservas</a>
+                                    <a href="{{url_for('index')}}" class="nav__dropdown-item">Lista Usuarios</a>
+                                    <a href="{{url_for('evento')}}" class="nav__dropdown-item">Lista Eventos</a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="nav__list">
+                            <div class="nav__items">
+                                <h3 class="nav__subtitle">Reportes</h3>
+                                <a href="{{url_for('facturas')}}" class="nav__link">
+                                    <i class='bx bx-file nav__icon'></i>
+                                    <span class="nav__name">Reportes</span>
+                                </a>
+                            </div>
+                        </div>
+                        <a href="#" class="nav__link">
+                            <i class='bx bx-bookmark nav__icon'></i>
+                            <span class="nav__name">Saved</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <a href="{{url_for('logout')}}" class="nav__link nav__logout">
+                <i class='bx bx-log-out nav__icon'></i>
+                <span class="nav__name">Log Out</span>
+            </a>
+        </nav>
+    </div>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert">
+    <span class="btn-close" onclick="this.parentElement.style.display='none';">&times;</span>
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+    <h1>Eventos disponibles</h1>
+
+    <h1>Reservas</h1>
+    <!-- Lista de usuarios -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Fecha</th>
+            <th>Tickets</th>
+            <th>Operation</th>
+        </tr>
+        {% for dato in datos %}
+        <tr>
+            <td>{{ dato.id}} </td>
+            <td>{{ dato.name_client }}</td>
+            <td>{{ dato.email_client }}</td>
+            <td>{{ dato.date }}</td>
+            <td>{{ dato.number_of_reserved_tickets }}</td>
+            <td>
+                <button onclick="openModal('editUserModal{{ dato.id }}')">Editar</button>
+                <form action="/eliminar_reserva/{{ dato.id }}" method="post" class="form-eliminar" style="display: inline;">
+                    <button type="submit" class="btn-eliminar">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+
+        <!-- Modal para editar usuario -->
+        <div id="editUserModal{{ dato.id }}" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('editUserModal{{ dato.id }}')">&times;</span>
+                <h2>Editar Reserva</h2>
+<form action="{{ url_for('editar_reserva', id=dato.id) }}" method="post" class="formulario">
+    <div class="campo">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" value="{{ dato.name_client }}" required>
+    </div>
+
+    <div class="campo">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ dato.email_client }}" required>
+    </div>
+
+    <div class="campo">
+        <label for="date">Fecha:</label>
+        <input type="date" id="date" name="date" value="{{ dato.date }}" required>
+    </div>
+
+    <div class="campo">
+        <label for="tickets">Tickets:</label>
+        <input type="number" id="tickets" name="tickets" value="{{ dato.number_of_reserved_tickets }}" required>
+    </div>
+
+    <button type="submit" class="boton">Guardar Cambios</button>
+</form>
+
+            </div>
+        </div>
+        {% endfor %}
+    </table>
+
+    <!-- Agrega tus scripts JavaScript aquí -->
+    <script>
+        // Función para abrir un modal
+        function openModal(modalId) {
+            var modal = document.getElementById(modalId);
+            modal.style.display = "block";
+        }
+
+        // Función para cerrar un modal
+        function closeModal(modalId) {
+            var modal = document.getElementById(modalId);
+            modal.style.display = "none";
+        }
+    </script>
+</body>
+
+</html>

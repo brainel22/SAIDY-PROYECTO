@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href=" {{url_for('static',filename = 'css/login.css')}}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<script src="{{url_for('static',filename = 'js/main.js')}}"></script>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert">
+            <span class="btn-close" onclick="this.parentElement.style.display='none';">&times;</span>
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<div id="cover">
+    <div id="form-ui">
+        <form action="{{url_for('access_login')}}" method="post">
+            <div id="form-body">
+                <div id="welcome-lines">
+                    <div id="w-line-2">Welcome Back</div>
+                </div>
+                <div id="input-area">
+                    <div class="f-inp">
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="f-inp"> 
+                       <input type="password" name="password" placeholder="Password" required>
+                    </div>
+                </div>
+                <div id="submit-button-cvr">
+                    <button type="submit" id="submit-button">LOGIN</button>
+                </div>
+                <div id="forgot-pass">
+                    <a href="{{url_for('reset_request')}}">Forgot password?</a>
+                </div>
+                <div id="forgot-pass">
+                        <a href="{{url_for('register')}}">No te haz registrado?</a>
+                </div>
+                <div id="bar"></div>
+            </div>
+        </form>
+        <div id="img-box">
+            <img src="{{url_for('static',filename='img/Boolings Reserves.png')}}" alt="UI Image">
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+    crossorigin="anonymous"></script>
+</html>

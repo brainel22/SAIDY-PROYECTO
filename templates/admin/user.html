@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add.css') }}">
+
+    <link rel="stylesheet" href="{{url_for ('static',filename = 'css/menu_admin.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+
+    <!-- Agrega tus estilos CSS aquí -->
+    <style>
+        /* Estilos para los modales */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header__container">
+            <img src="{{url_for('static',filename='img/Boolings Reserves.png')}}" alt="" class="header__img">
+    
+            <a href="#" class="header__logo">Boolings Reserves</a>
+            <form action="{{url_for('search_admin')}}" method="get">
+                <div class="header__search">
+<input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Buscar por nombre...">
+                </div>
+            </form>
+            <div class="header__toggle">
+                <i class='bx bx-menu' id="header-toggle"></i>
+            </div>
+        </div>
+    </header>
+        <!--========== NAV ==========-->
+        <div class="nav" id="navbar">
+            <nav class="nav__container">
+                <div>
+                    <a href="#" class="nav__link nav__logo">
+                        <i class='bx bxs-disc nav__icon'></i>
+                        <span class="nav__logo-name">Boolings Reserves</span>
+                    </a>
+    
+                    <div class="nav__list">
+                        <div class="nav__items">
+                            <h3 class="nav__subtitle">Admin</h3>
+    
+                            <a href="{{url_for('menu_admin')}}" class="nav__link active">
+                                <i class='bx bx-home nav__icon'></i>
+                                <span class="nav__name">Home</span>
+                            </a>
+    
+                            <div class="nav__dropdown">
+                                <a href="#" class="nav__link">
+                                    <i class='bx bx-layer nav__icon'></i>
+                                    <span class="nav__name">Listas</span>
+                                    <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                                </a>
+    
+                                <div class="nav__dropdown-collapse">
+                                    <div class="nav__dropdown-content">
+                                        <a href="{{url_for('reservas')}}" class="nav__dropdown-item">Lista Reservas</a>
+                                        <a href="{{url_for('index')}}" class="nav__dropdown-item">Lista Usuarios</a>
+                                        <a href="{{url_for('evento')}}" class="nav__dropdown-item">Lista Eventos</a>
+                                    </div>
+                                </div>
+    
+                            </div>
+    
+                            <div class="nav__list">
+                                <div class="nav__items">
+                                    <h3 class="nav__subtitle">Reportes</h3>
+                                    <a href="{{url_for('facturas')}}" class="nav__link">
+                                        <i class='bx bx-folder nav__icon'></i>
+                                        <span class="nav__name">Reportes</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <a href="{{url_for('logout')}}" class="nav__link nav__logout">
+                    <i class='bx bx-log-out nav__icon'></i>
+                    <span class="nav__name">Log Out</span>
+                </a>
+            </nav>
+        </div>
+
+
+    <!-- Botón para agregar nuevo usuario -->
+
+    <!-- Modal para agregar usuario -->
+    <div id="addUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addUserModal')">&times;</span>
+            <h2>Agregar Usuario</h2>
+            <form action="/add_user" method="post">
+                <label for="username">Nombre de usuario:</label>
+                <input type="text" id="username" name="username" required><br>
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email" required><br>
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" required><br>
+                <button type="submit">Agregar</button>
+            </form>
+        </div>
+    </div>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert">
+    <span class="btn-close" onclick="this.parentElement.style.display='none';">&times;</span>
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<h1>Usuarios</h1>
+ <center>    <button onclick="openModal('addUserModal')">Agregar Usuario</button>
+</center> <br>
+    <center><a href="{{ url_for('ver_pdf_usuarios') }}" target="_blank">Descargar Reporte PDF</a>
+</center>
+<div id="userTableContainer">
+    <table id="userTable">
+
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Operación</th>
+        </tr>
+        {% for dato in datos %}
+        <tr>
+            <td>{{ dato.id }}</td>
+            <td>{{ dato.username }}</td>
+            <td>{{ dato.email }}</td>
+            <td>
+                <button onclick="openModal('editUserModal{{ dato.id }}')" class="link-editar ">Editar</button>
+                <form action="/eliminar/{{ dato.id }}" method="post" class="form-eliminar" style="display: inline;">
+                    <button type="submit" class="btn-eliminar" >Eliminar</button>
+                </form>
+            </td>
+        </tr>
+
+        <!-- Modal para editar usuario -->
+        <div id="editUserModal{{ dato.id }}" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('editUserModal{{ dato.id }}')">&times;</span>
+                <h2>Editar Usuario</h2>
+                <form action="/editar/{{ dato.id }}" method="post">
+                    <label for="username">Nombre de usuario:</label>
+                    <input type="text" id="username" name="username" value="{{ dato.username }}" required><br>
+                    <label for="email">Correo electrónico:</label>
+                    <input type="email" id="email" name="email" value="{{ dato.email }}" required><br>
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" name="password" value="{{ dato.password }}" required><br>
+                    <button type="submit">Guardar</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+        <!-- El contenido de tu tabla de usuarios va aquí -->
+    </table>
+</div>
+    <!-- Agrega tus scripts JavaScript aquí -->
+    <script>
+        // Función para abrir un modal
+        function openModal(modalId) {
+            var modal = document.getElementById(modalId);
+            modal.style.display = "block";
+        }
+
+        // Función para cerrar un modal
+        function closeModal(modalId) {
+            var modal = document.getElementById(modalId);
+            modal.style.display = "none";
+        }
+
+        function searchTable() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("searchInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("userTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[1]; // Cambia el índice si quieres buscar en otra columna
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+
+    </script>
+</body>
+
+</html>

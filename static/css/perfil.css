@@ -1,0 +1,234 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --dark-gold-color: #B08B12;
+    /* Oro oscuro, elegante */
+    --elegant-blue: #1B365D;
+    /* Azul elegante, un tono profundo y sereno */
+    --blueberry-cranberry: #4E4C7F;
+    /* Arándano azul, un tono azul oscuro con matices púrpuras */
+    --title-color: #FFFFFF;
+    /* Blanco para títulos */
+    --text-color: #1B365D;
+    /* Azul elegante para texto principal */
+    --text-color-light: #B08B12;
+    /* Oro oscuro para textos secundarios y acentos */
+    --body-color: #FFFFFF;
+    /* Fondo del cuerpo en blanco */
+    --container-color: #E6EBF0;
+    /* Color de contenedor en un tono claro y neutro */
+    --font: "Poppins", sans-serif;
+    /* Cambio de tipografía a Poppins */
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    line-height: 1.6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    color: var(--text-color);
+    font-family: var(--font);
+    background-color: var(--body-color);
+}
+
+/*=====================================
+Estilos de la utilidad
+=====================================*/
+.seccion-perfil-usuario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background-color: var(--container-color);
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+.seccion-perfil-usuario .perfil-usuario-header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.seccion-perfil-usuario .perfil-usuario-portada {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(45deg, var(--dark-gold-color), var(--blueberry-cranberry));
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.seccion-perfil-usuario .perfil-usuario-portada .boton-portada {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: var(--elegant-blue);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.seccion-perfil-usuario .perfil-usuario-avatar {
+    display: flex;
+    width: 150px;
+    height: 150px;
+    align-items: center;
+    justify-content: center;
+    border: 5px solid #FFFFFF;
+    background-color: #DFE5F2;
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    bottom: -75px;
+    left: calc(50% - 75px);
+    z-index: 1;
+}
+
+.seccion-perfil-usuario .perfil-usuario-avatar img {
+    width: 100%;
+    border-radius: 50%;
+}
+
+.seccion-perfil-usuario .perfil-usuario-avatar .boton-avatar {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border: 0;
+    background-color: var(--dark-gold-color);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.seccion-perfil-usuario .perfil-usuario-body {
+    width: 100%;
+    text-align: center;
+    margin-top: 6rem;
+}
+
+.seccion-perfil-usuario .perfil-usuario-body .titulo {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--elegant-blue);
+    margin-bottom: 0.5rem;
+}
+
+.seccion-perfil-usuario .perfil-usuario-body .texto {
+    color: var(--text-color-light);
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.seccion-perfil-usuario .perfil-usuario-bio {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.seccion-perfil-usuario .perfil-usuario-bio p {
+    font-size: 0.95rem;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.seccion-perfil-usuario .lista-datos {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.seccion-perfil-usuario .lista-datos li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+}
+
+.seccion-perfil-usuario .lista-datos li:last-child {
+    border-bottom: none;
+}
+
+.seccion-perfil-usuario .lista-datos li .icono {
+    margin-right: 10px;
+    color: var(--dark-gold-color);
+    font-size: 1.2rem;
+}
+
+.seccion-perfil-usuario .redes-sociales {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.seccion-perfil-usuario .redes-sociales .boton-redes {
+    border: 0;
+    background-color: var(--elegant-blue);
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.seccion-perfil-usuario .redes-sociales .boton-redes:hover {
+    background-color: var(--dark-gold-color);
+}
+
+/* Adaptación a dispositivos */
+@media (max-width: 768px) {
+    .seccion-perfil-usuario {
+        padding: 1rem;
+    }
+
+    .seccion-perfil-usuario .perfil-usuario-portada {
+        height: 150px;
+    }
+
+    .seccion-perfil-usuario .perfil-usuario-avatar {
+        width: 120px;
+        height: 120px;
+        bottom: -60px;
+        left: calc(50% - 60px);
+    }
+
+    .seccion-perfil-usuario .perfil-usuario-body .titulo {
+        font-size: 1.5rem;
+    }
+
+    .seccion-perfil-usuario .perfil-usuario-body .texto {
+        font-size: 0.9rem;
+    }
+}
