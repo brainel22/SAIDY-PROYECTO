@@ -1,103 +1,106 @@
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 
+/*========== VARIABLES CSS ==========*/
 :root {
-    --dark-gold-color: #B08B12;
-    /* Dorado oscuro, elegante */
-    --elegant-blue: #1B365D;
-    /* Azul elegante, un tono profundo y sereno */
-    --blueberry-cranberry: #4E4C7F;
-    /* Arándano azul, un tono azul oscuro con matices púrpuras */
+    --header-height: 3.5rem;
+    --nav-width: 219px;
+
+    /*========== Nueva paleta de colores ==========*/
+    --black: #0a0908ff;
+    --gunmetal: #22333bff;
+    --almond: #eae0d5ff;
+    --khaki: #c6ac8fff;
+    --walnut-brown: #5e503fff;
+
     --title-color: #FFFFFF;
-    /* Blanco para títulos */
-    --text-color: #1B365D;
-    /* Azul elegante para texto principal */
-    --text-color-light: #B08B12;
-    /* Dorado oscuro para textos secundarios y acentos */
-    --body-color: #FFFFFF;
-    /* Fondo del cuerpo en blanco */
-    --container-color: #E6EBF0;
-    /* Color de contenedor */
-    --font: "Josefin Sans", sans-serif;
-    --emerald-green: #50C878;
-    /* Verde esmeralda */
-    --dark-gold-color: #B08B12;
-    /* Dorado oscuro */
+    --text-color: #5e503fff;
+    /* walnut-brown para texto principal */
+    --text-color-light: #c6ac8fff;
+    /* khaki para textos secundarios */
+    --body-color: #eae0d5ff;
+    /* almond como fondo del cuerpo */
+    --container-color: #c6ac8fff;
+    /* khaki para contenedores */
+
+    /*========== Font and typography ==========*/
+    --body-font: "Josefin Sans", sans-serif;
+    --normal-font-size: .938rem;
+    --small-font-size: .75rem;
+    --smaller-font-size: .75rem;
+
+    /*========== Font weight ==========*/
+    --font-medium: 500;
+    --font-semi-bold: 600;
+
+    /*========== z index ==========*/
+    --z-fixed: 100;
 }
 
 /* static/style.css */
 body {
-    font-family: var(--font);
+    font-family: var(--body-font);
+    background-color: var(--body-color);
+    color: var(--text-color);
 }
 
 h1 {
     text-align: center;
+    color: var(--black);
 }
 
 table {
     width: 80%;
     margin: 20px auto;
     border-collapse: collapse;
+    background-color: var(--body-color);
 }
 
 th,
 td {
-    border: 1px solid var(--dark-gold-color);
+    border: 1px solid var(--walnut-brown);
     padding: 8px;
     text-align: left;
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: var(--khaki);
+    color: var(--gunmetal);
 }
 
 /* Estilos para el enlace de editar */
-.link-editar {
-    color: var(--container-color);
-    background-color: var(--elegant-blue);
-    /* Color azul para enlaces */
+#link-editar {
+    color: var(--body-color);
+    background-color: var(--gunmetal);
     text-decoration: none;
-    /* Eliminar subrayado */
     margin-right: 10px;
-    /* Margen a la derecha para separarlo del botón */
     font-weight: bold;
-    /* Hacer el texto negrita */
-    border-radius: 1px; ;
-
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
-.link-editar:hover {
-    text-decoration: underline;
-    /* Subrayar al pasar el ratón */
+#link-editar:hover {
+    background-color: var(--almond);
+    text-decoration: none;
 }
 
 /* Estilos para el formulario y botón de eliminar */
 .form-eliminar {
     display: inline;
-    /* Asegura que el formulario se muestre en línea con el enlace */
 }
 
 .btn-eliminar {
-    color: white;
-    /* Texto blanco */
-    background-color: var(--dark-gold-color);
-    /* Fondo rojo */
+    color: var(--body-color);
+    background-color: var(--black);
     border: none;
-    /* Sin bordes */
     padding: 5px 10px;
-    /* Relleno alrededor del texto */
     cursor: pointer;
-    /* Cursor en forma de mano al pasar el ratón */
     border-radius: 5px;
-    /* Bordes redondeados */
     font-weight: bold;
-    /* Negrita */
 }
 
 .btn-eliminar:hover {
-    background-color: #C82333;
-    /* Color más oscuro al pasar el ratón */
+    background-color: var(--gunmetal);
 }
-
 
 img {
     max-width: 100px;
@@ -107,8 +110,9 @@ img {
     max-width: 400px;
     margin: 0 auto;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--khaki);
     border-radius: 5px;
+    background-color: var(--body-color);
 }
 
 .campo {
@@ -118,6 +122,7 @@ img {
 label {
     display: block;
     margin-bottom: 5px;
+    color: var(--gunmetal);
 }
 
 input[type="text"],
@@ -126,45 +131,63 @@ input[type="number"],
 input[type="date"] {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--khaki);
     border-radius: 5px;
+    background-color: var(--body-color);
+    color: var(--text-color);
 }
 
 .boton {
     display: block;
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
-    color: #fff;
+    background-color: var(--gunmetal);
+    color: var(--body-color);
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .boton:hover {
-    background-color: #0056b3;
+    background-color: var(--black);
 }
 
-a{
-    color: var(--text-color-light);
+a {
+    color: var(--khaki);
 }
 
-a:hover{
-    color: var(--elegant-blue);
+a:hover {
+    color: var(--gunmetal);
 }
 
 .alert {
     padding: 10px;
-    background-color: var(--elegant-blue);
-    border: 1px solid var(--text-color-light);
+    background-color: var(--gunmetal);
+    border: 1px solid var(--khaki);
     color: var(--body-color);
     margin-top: 20px;
     border-radius: 5px;
-    font-family: var(--font);
+    font-family: var(--body-font);
 }
 
 .btn-close {
     float: right;
     cursor: pointer;
-    color: var(--dark-gold-color);
+    color: var(--khaki);
+    font-weight: bold;
+}
+
+/* Additional styles for better contrast and aesthetics */
+tr:nth-child(even) {
+    background-color: rgba(198, 172, 143, 0.1);
+}
+
+tr:hover {
+    background-color: rgba(34, 51, 59, 0.1);
+}
+
+input:focus {
+    outline: 2px solid var(--khaki);
+    border-color: var(--gunmetal);
 }

@@ -1,0 +1,462 @@
+
+{% block content %}
+<head>
+    <title>Historial</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/Boolings Reserves.png') }}" type="image/png">
+
+    <style>
+        /* Estilos para la sección de historial */
+        .historial-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            font-family: 'Josefin Sans', sans-serif;
+        }
+
+        .historial-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .historial-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--walnut-brown);
+            border-radius: 3px;
+        }
+
+        .historial-header h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: var(--gunmetal);
+            margin-bottom: 0.8rem;
+            letter-spacing: -0.5px;
+        }
+
+        .historial-header p {
+            color: var(--walnut-brown);
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .historial-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            background: var(--almond);
+            color: var(--walnut-brown);
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--walnut-brown);
+            color: white;
+        }
+
+        .filter-btn:hover {
+            background: var(--khaki);
+            transform: translateY(-2px);
+        }
+
+        .historial-items {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .historial-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            box-shadow: 0 4px 12px rgba(94, 80, 63, 0.1);
+            border-left: 4px solid var(--walnut-brown);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .historial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(94, 80, 63, 0.15);
+        }
+
+        .historial-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(94, 80, 63, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--walnut-brown);
+            font-size: 1.2rem;
+        }
+
+        .historial-content {
+            flex: 1;
+        }
+
+        .historial-content h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gunmetal);
+            margin-bottom: 0.5rem;
+        }
+
+        .historial-content p {
+            font-size: 0.9rem;
+            color: var(--walnut-brown);
+            margin-bottom: 0.3rem;
+            line-height: 1.5;
+        }
+
+        .historial-date {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 0.8rem;
+            color: var(--khaki);
+            font-weight: 600;
+        }
+
+        .historial-empty {
+            text-align: center;
+            padding: 3rem;
+            background: var(--almond);
+            border-radius: 12px;
+            color: var(--walnut-brown);
+        }
+
+        .historial-empty i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--khaki);
+        }
+
+        .historial-empty p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-explorar {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            background: var(--walnut-brown);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-explorar:hover {
+            background: var(--gunmetal);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(94, 80, 63, 0.2);
+        }
+
+        /* Efectos de filtrado */
+        .historial-card[data-type="reserva"] {
+            border-left-color: var(--success);
+        }
+
+        .historial-card[data-type="favorito"] {
+            border-left-color: var(--danger);
+        }
+
+        .historial-card[data-type="pago"] {
+            border-left-color: var(--info);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .historial-card {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .historial-date {
+                position: static;
+                align-self: flex-end;
+            }
+        }
+    </style>
+        <link rel="stylesheet" href="{{url_for ('static',filename = 'css/menu2.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+
+</head>
+<!--========== HEADER ==========-->
+<header class="header">
+    <div class="header__container">
+        <img src="{{url_for('static',filename='img/Boolings Reserves.png')}}" alt="" class="header__img">
+
+        <a href="#" class="header__logo">Boolings Reserves</a>
+        <form action="#" method="get">
+            <div class="header__search">
+                <input type="search" name="query" placeholder="Search" class="header__input">
+                <i class='bx bx-search header__icon'></i>
+            </div>
+        </form>
+        <div class="header__toggle">
+            <i class='bx bx-menu' id="header-toggle"></i>
+        </div>
+    </div>
+</header>
+<!--========== NAV ==========-->
+<div class="nav" id="navbar">
+    <nav class="nav__container">
+        <div>
+            <a href="{{url_for('menu')}}" class="nav__link nav__logo">
+                <i class='bx bxs-disc nav__icon'></i>
+                <span class="nav__logo-name">Boolings Reserves</span>
+            </a>
+
+            <div class="nav__list">
+                <div class="nav__items">
+                    <h3 class="nav__subtitle">Profile</h3>
+                    <a href="{{url_for('menu')}}" class="nav__link active">
+                        <i class='bx bx-home nav__icon'></i>
+                        <span class="nav__name">Home</span>
+                    </a>
+                    <a href="{{url_for('about')}}" class="nav__link">
+                        <i class='bx bx-layer nav__icon'></i>
+                        <span class="nav__name">About Us</span>
+                    </a>
+
+                    <a href="{{url_for('perfil')}}" class="nav__link">
+                        <i class='bx bx-user nav__icon'></i>
+                        <span class="nav__name">Perfil</span>
+                    </a>
+
+                    <a href="{{url_for('contact')}}" class="nav__link">
+                        <i class='bx bx-comment nav__icon'></i>
+                        <span class="nav__name">Contactos</span>
+                    </a>
+
+                    </a>
+                    <div class="nav__items">
+                        <h3 class="nav__subtitle">Eventos</h3>
+                        <div class="nav__dropdown">
+                            <a href="{{url_for('eventos_disponibles')}}" class="nav__link">
+                                <i class='bx bx-calendar nav__icon'></i>
+                                <span class="nav__name">Eventos Disponibles</span>
+                                <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                            </a>
+
+                            <div class="nav__dropdown-collapse">
+                                <div class="nav__dropdown-content">
+                                    <a href="{{url_for('concierto')}}" class="nav__dropdown-item">Musica y Concierto</a>
+                                    <a href="{{url_for('arte_cultura')}}" class="nav__dropdown-item">Arte y Cultura</a>
+                                    <a href="{{url_for('festivales')}}" class="nav__dropdown-item">Festivales</a>
+                                    <a href="{{url_for('talleres')}}" class="nav__dropdown-item">Cursos y talleres</a>
+                                    <a href="{{url_for('conferencia')}}" class="nav__dropdown-item">Conferencias</a>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <a href="{{url_for('historial')}}" class="nav__link">
+                            <i class='bx bx-history nav__icon'></i>
+                            <span class="nav__name">Historial</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <a href="{{url_for('logout')}}" class="nav__link nav__logout">
+                <i class='bx bx-log-out nav__icon'></i>
+                <span class="nav__name">Log Out</span>
+            </a>
+    </nav>
+</div>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-messages">
+    {% for message in messages %}
+    <div class="flash-message alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close-btn" aria-label="Close">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<div class="historial-container">
+    <div class="historial-header">
+        <h1>Tu Historial</h1>
+        <p>Revisa todas tus actividades recientes en Boolings Reserves</p>
+    </div>
+
+    <div class="historial-filters">
+        <button class="filter-btn active" data-filter="all">Todo</button>
+        <button class="filter-btn" data-filter="reserva"><i class='bx bx-calendar-check nav__icon'></i></button>
+        <button class="filter-btn" data-filter="favorito"><i class='bx bx-calendar-heart nav__icon'></i></button>
+        <button class="filter-btn" data-filter="pago"><i class='bx bx-credit-card nav__icon'></i></button>
+    </div>
+
+    <div class="historial-items">
+        {% if historial %}
+        {% for item in historial %}
+        <div class="historial-card" data-type="{{ item.type }}">
+            <div class="historial-icon">
+                {% if item.type == 'reserva' %}
+                <i class='bx bx-calendar-check' style="color: #28a745;"></i>
+                {% elif item.type == 'favorito' %}
+                <i class='bx bxs-heart' style="color: #dc3545;"></i>
+                {% else %}
+                <i class='bx bx-credit-card' style="color: #17a2b8;"></i>
+                {% endif %}
+            </div>
+
+            <div class="historial-content">
+                <h3>
+                    {% if item.type == 'reserva' %}
+                    Reserva confirmada
+                    {% elif item.type == 'favorito' %}
+                    Evento favorito
+                    {% else %}
+                    Pago realizado
+                    {% endif %}
+                </h3>
+
+                <p><strong>{{ item.event_name }}</strong></p>
+                <p>Categoría: {{ item.category }}</p>
+
+                {% if item.type == 'reserva' %}
+                <p>Tickets: {{ item.number_of_reserved_tickets }}</p>
+                <p>Fecha reserva: {{ item.reservation_date.strftime('%d/%m/%Y %H:%M') }}</p>
+                {% elif item.type == 'pago' %}
+                <p>Monto: ${{ "%.2f"|format(item.amount_paid) }}</p>
+                <p>Tarjeta: ****{{ item.card_number }}</p>
+                {% endif %}
+
+                <p>Fecha evento: {{ item.event_date.strftime('%d/%m/%Y') }}
+                    {% if item.event_time %}a las {{ item.event_time }}{% endif %}</p>
+            </div>
+
+            <div class="historial-date">
+                {{ item.reservation_date.strftime('%d %b') }}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="historial-empty">
+            <i class='bx bx-history'></i>
+            <p>No hay actividades recientes</p>
+            <a href="{{ url_for('eventos_disponibles') }}" class="btn-explorar">
+                <i class='bx bx-calendar'></i> Explorar eventos
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<script src="{{url_for('static',filename = 'js/login.js')}}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const historialCards = document.querySelectorAll('.historial-card');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                // Remover clase active de todos los botones
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Añadir clase active al botón clickeado
+                this.classList.add('active');
+
+                const filter = this.getAttribute('data-filter');
+
+                historialCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-type') === filter) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Actualizar dinámicamente cuando se añade/elimina un favorito
+        window.updateHistorial = function (eventData, action) {
+            const historialContainer = document.querySelector('.historial-items');
+            const emptyMessage = document.querySelector('.historial-empty');
+
+            if (action === 'added') {
+                // Crear nuevo elemento para el favorito
+                const newItem = document.createElement('div');
+                newItem.className = 'historial-card';
+                newItem.dataset.type = 'favorito';
+                newItem.innerHTML = `
+                    <div class="historial-icon" style="background: rgba(220, 53, 69, 0.1); color: #dc3545;">
+                        <i class="bx bxs-heart"></i>
+                    </div>
+                    <div class="historial-content">
+                        <h3>Evento favorito</h3>
+                        <p>${eventData.name}</p>
+                        <p>Categoría: ${eventData.category || 'General'}</p>
+                        <p>Fecha evento: ${eventData.date} ${eventData.time ? 'a las ' + eventData.time : ''}</p>
+                        <p>Añadido el: ${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</p>
+                    </div>
+                    <div class="historial-date">
+                        ${new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
+                    </div>
+                `;
+
+                // Insertar al principio
+                if (historialContainer.firstChild) {
+                    historialContainer.insertBefore(newItem, historialContainer.firstChild);
+                } else {
+                    historialContainer.appendChild(newItem);
+                }
+
+                // Eliminar mensaje de vacío si existe
+                if (emptyMessage) {
+                    emptyMessage.remove();
+                }
+            } else if (action === 'removed') {
+                // Buscar y eliminar el favorito correspondiente
+                const items = document.querySelectorAll('.historial-card[data-type="favorito"]');
+                items.forEach(item => {
+                    if (item.querySelector('p').textContent === eventData.name) {
+                        item.remove();
+                    }
+                });
+
+                // Mostrar mensaje de vacío si no hay items
+                if (historialContainer.children.length === 0) {
+                    historialContainer.innerHTML = `
+                        <div class="historial-empty">
+                            <i class='bx bx-history'></i>
+                            <p>No hay actividades recientes</p>
+                            <a href="{{ url_for('eventos_disponibles') }}" class="btn-explorar">
+                                <i class='bx bx-calendar'></i> Explorar eventos
+                            </a>
+                        </div>
+                    `;
+                }
+            }
+        };
+    });
+</script>
+{% endblock %}
+

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Reservas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
+    <style>
+        /* Estilos CSS */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .reservas {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+
+        .grafico {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        img.logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50px;
+            float: left;
+            margin-right: 10px;
+        }
+
+        canvas {
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img class="logo" src="{{url_for('static',filename='img/Boolings Reserves.png')}}" alt="">
+        <h1>Reporte de Reservas</h1>
+        <div class="reservas">
+            <table id="reservasTable">
+                <thead>
+                    <tr>
+                        <th>Evento</th>
+                        <th>Precio</th>
+                        <th>Fecha</th>
+                        <th>Número de tickets reservados</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="grafico">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Hacemos una solicitud AJAX para obtener los datos de las reservas
+            fetch('/reservas_json')
+                .then(response => response.json())
+                .then(data => {
+                    // Mostrar los datos en la tabla
+                    const reservasTableBody = document.querySelector('#reservasTable tbody');
+                    data.forEach(reserva => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${reserva.name}</td>
+                            <td>${reserva.price}</td>
+                            <td>${reserva.date}</td>
+                            <td>${reserva.total_tickets}</td>
+                            <td>${reserva.total_price}</td>
+                        `;
+                        reservasTableBody.appendChild(row);
+                    });
+
+                    // Obtener los datos para el gráfico circular
+                    const events = data.map(reserva => reserva.name);
+                    const ticketsReserved = data.map(reserva => reserva.total_tickets);
+
+                    // Crear el gráfico circular
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: events,
+                            datasets: [{
+                                label: 'Reservas de tickets por evento',
+                                data: ticketsReserved,
+                                backgroundColor: [
+                                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#E7E9ED'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    text: 'Balance de Reservas por Evento',
+                                    display: true
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al obtener los datos de las reservas:', error);
+                });
+        });
+
+    </script>
+    <div class="footer">
+        &copy; 2024 - Reporte de Reservas
+    </div>
+</body>
+
+</html>

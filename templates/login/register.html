@@ -5,29 +5,28 @@
     <title>Registro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href=" {{url_for('static',filename = 'css/login.css')}}">
+<link rel="icon" href="{{ url_for('static', filename='img/Boolings Reserves.png') }}" type="image/png">
 
 </head>
-<script src="{{url_for('static',filename = 'js/main.js')}}"></script>
 
 {% with messages = get_flashed_messages() %}
-
 {% if messages %}
-<br />
-{% for message in messages %}
-<div class="alert alert-custom" role="alert">
-    <strong>{{ message }}</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="flash-messages">
+    {% for message in messages %}
+    <div class="flash-message alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close-btn" aria-label="Close">&times;</button>
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}
 {% endif %}
-
 {% endwith %}
 <div id="cover">
     <div id="form-ui">
         <form action="{{url_for('register')}}" method="post" >
             <div id="form-body">
                 <div id="welcome-lines">
-                    <div id="w-line-2">Welcome</div>
+                    <div id="w-line-2">Bienvenidos</div>
                 </div>
                 <div id="input-area">
                 <div class="f-inp">
@@ -55,6 +54,7 @@
         </div>
     </div>
 </div>
+<script src="{{url_for('static',filename = 'js/login.js')}}"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"

@@ -1,239 +1,393 @@
-/* reservation.css - Rediseño completo del formulario */
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 
+/* Estilos orgánicos modernos con Josefin Sans */
 :root {
-    --primary: #2563eb;
-    --primary-light: #dbeafe;
-    --primary-dark: #1e40af;
-    --text: #1f2937;
-    --text-light: #6b7280;
-    --bg: #f9fafb;
-    --card-bg: #ffffff;
-    --border: #e5e7eb;
-    --radius-lg: 16px;
-    --radius-md: 12px;
-    --radius-sm: 8px;
-    --shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
-    --shadow-hover: 0 6px 40px rgba(0, 0, 0, 0.12);
+    --black: #0a0908ff;
+    --gunmetal: #22333bff;
+    --almond: #eae0d5ff;
+    --khaki: #c6ac8fff;
+    --walnut-brown: #5e503fff;
+
+    --primary: var(--walnut-brown);
+    --primary-light: var(--almond);
+    --text: var(--gunmetal);
+    --text-light: var(--khaki);
+    --bg: var(--almond);
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --border: var(--khaki);
+    --radius: 18px;
+    --shadow: 0 8px 32px rgba(94, 80, 63, 0.12);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     background-color: var(--bg);
     color: var(--text);
-    line-height: 1.5;
-    margin: 0;
-    padding: 2rem;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    line-height: 1.6;
+    padding: 20px;
+    background-image: radial-gradient(circle at 10% 20%, rgba(198, 172, 143, 0.2) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(94, 80, 63, 0.2) 0%, transparent 20%);
+    font-weight: 400;
+    letter-spacing: 0.3px;
 }
 
-/* Contenedor principal - Tarjeta moderna */
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
 .reservation-card {
     background: var(--card-bg);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
     box-shadow: var(--shadow);
-    padding: 3rem;
-    width: 100%;
-    max-width: 740px;
-    margin: 2rem 0;
-    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+    border: 1px solid rgba(94, 80, 63, 0.2);
+    backdrop-filter: blur(8px);
 }
 
-.reservation-card:hover {
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-4px);
-}
-
-/* Encabezado con icono */
 .reservation-header {
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--primary), var(--khaki));
+    color: white;
     text-align: center;
-    margin-bottom: 2.5rem;
     position: relative;
+    overflow: hidden;
+}
+
+.reservation-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.1)" d="M0,0 L100,0 L100,100 L0,100 Z" /></svg>');
+    background-size: cover;
+    opacity: 0.2;
 }
 
 .reservation-header h1 {
-    color: var(--text);
     font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.reservation-header h1::before {
-    content: "✓";
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    background-color: var(--primary-light);
-    color: var(--primary);
-    border-radius: 50%;
-    font-size: 1.2rem;
-}
-
-.reservation-header p {
-    color: var(--text-light);
-    margin: 0;
-}
-
-/* Secciones del formulario */
-.form-section {
-    margin-bottom: 2.5rem;
+.reservation-body {
+    padding: 2.5rem;
 }
 
 .section-title {
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     font-weight: 600;
-    color: var(--primary-dark);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    margin-bottom: 2rem;
+    color: var(--primary);
+    position: relative;
+    display: inline-block;
+    letter-spacing: 0.5px;
 }
 
-.section-title::before {
-    content: "";
-    display: block;
-    width: 6px;
-    height: 6px;
-    background-color: var(--primary);
-    border-radius: 50%;
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--khaki));
+    border-radius: 3px;
 }
 
-/* Grid de dos columnas para inputs */
-.input-grid {
+.form-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
 }
 
-/* Estilos mejorados para inputs */
-.input-group {
-    margin-bottom: 1.25rem;
+.form-group {
+    margin-bottom: 1.8rem;
+    position: relative;
 }
 
-.input-group label {
+label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
+    margin-bottom: 0.8rem;
     font-weight: 500;
+    font-size: 1rem;
     color: var(--text);
+    letter-spacing: 0.5px;
 }
 
-.input-group input {
+input,
+select {
     width: 100%;
-    padding: 0.875rem 1rem;
+    padding: 1.1rem 1.2rem;
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 0.9375rem;
-    transition: all 0.2s;
-    background-color: var(--bg);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: rgba(255, 255, 255, 0.8);
+    color: var(--text);
+    font-family: 'Josefin Sans', sans-serif;
 }
 
-.input-group input:focus {
+input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-/* Sección de pago destacada */
-.payment-section {
-    background-color: var(--primary-light);
-    padding: 1.75rem;
-    border-radius: var(--radius-md);
-    border-left: 4px solid var(--primary);
-    margin: 2rem 0;
-}
-
-/* Botones mejorados */
-.button-group {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
-.btn {
-    padding: 1rem 1.75rem;
-    font-size: 1rem;
-    font-weight: 500;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all 0.2s;
-    flex: 1;
-    text-align: center;
-}
-
-.btn-primary {
-    background-color: var(--primary);
-    color: white;
-    border: none;
-}
-
-.btn-primary:hover {
-    background-color: var(--primary-dark);
+    box-shadow: 0 0 0 3px rgba(94, 80, 63, 0.2);
+    background-color: white;
     transform: translateY(-2px);
 }
 
-.btn-secondary {
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.1rem 2.2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    font-size: 1rem;
+    letter-spacing: 0.8px;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--khaki));
+    color: white;
+    box-shadow: 0 4px 12px rgba(94, 80, 63, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--gunmetal), var(--primary));
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(34, 51, 59, 0.4);
+}
+
+.btn-outline {
     background-color: transparent;
     color: var(--primary);
-    border: 1px solid var(--border);
+    border: 2px solid var(--primary);
 }
 
-.btn-secondary:hover {
-    background-color: var(--bg);
-    border-color: var(--primary);
+.btn-outline:hover {
+    background-color: rgba(94, 80, 63, 0.08);
+    transform: translateY(-3px);
+    border-color: var(--gunmetal);
+    color: var(--gunmetal);
 }
 
-/* Alertas mejoradas */
-.alert {
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.75rem;
-    border-radius: var(--radius-sm);
+.actions {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    margin-top: 3rem;
+}
+
+.alert {
+    padding: 1.3rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+    border: 1px solid transparent;
+}
+
+.alert::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+}
+
+.alert-danger {
+    background-color: rgba(255, 235, 235, 0.9);
+    color: #b91c1c;
+    border-color: #ffcccc;
+}
+
+.alert-danger::before {
+    background-color: #b91c1c;
 }
 
 .alert-info {
-    background-color: var(--primary-light);
-    color: var(--primary-dark);
-    border-left: 4px solid var(--primary);
+    background-color: rgba(234, 224, 213, 0.9);
+    color: var(--text);
+    border-color: var(--border);
 }
 
-.error {
-    background-color: #fee2e2;
-    color: #b91c1c;
-    border-left: 4px solid #dc2626;
+.alert-info::before {
+    background: linear-gradient(var(--primary), var(--khaki));
 }
 
-/* Responsive */
+.close {
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    color: inherit;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    font-weight: 300;
+}
+
+.close:hover {
+    opacity: 1;
+}
+
+/* Efectos orgánicos mejorados */
+.form-group::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--khaki));
+    transition: width 0.4s ease;
+}
+
+.form-group:focus-within::after {
+    width: 100%;
+}
+
+/* Efecto de textura sutil */
+.reservation-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%235e503f" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.1"/></svg>');
+    pointer-events: none;
+    z-index: -1;
+}
+
 @media (max-width: 768px) {
-    .input-grid {
-        grid-template-columns: 1fr;
+    .reservation-body {
+        padding: 2rem;
     }
 
-    .reservation-card {
-        padding: 2rem 1.5rem;
-    }
-
-    .button-group {
+    .actions {
         flex-direction: column;
+        gap: 1.2rem;
     }
-}
 
-@media (max-width: 480px) {
-    body {
-        padding: 1rem;
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 
     .reservation-header h1 {
-        font-size: 1.75rem;
+        font-size: 1.8rem;
+    }
+}
+
+/* Animación de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reservation-card {
+    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.flash-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 350px;
+}
+
+.flash-message {
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    opacity: 0;
+    transform: translateX(100%);
+    animation: slideIn 0.5s forwards, fadeOut 0.5s 4.5s forwards;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flash-message.success {
+    background-color: #28a745;
+}
+
+.flash-message.error {
+    background-color: #dc3545;
+}
+
+.flash-message.warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.flash-message.info {
+    background-color: #17a2b8;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-left: 15px;
+    line-height: 1;
+    padding: 0;
+}
+
+.close-btn:hover {
+    opacity: 0.8;
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateX(100%);
     }
 }

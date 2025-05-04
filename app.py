@@ -1,5 +1,5 @@
 #   Biblioteca Flask y Mysql
-from flask import Flask, render_template,request,redirect,flash, url_for,session,jsonify,make_response,Response
+from flask import Flask, render_template,request,redirect,flash, url_for,session,jsonify,make_response,Response,send_from_directory
 from flask_mysqldb import MySQL
 from flask_session import Session
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -13,6 +13,7 @@ import pandas as pd
 #   Para hacer la factura
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
+from reportlab.lib.colors import HexColor  # Añade esta importación
 from reportlab.lib.units import inch
 from reportlab.platypus import Table, TableStyle,SimpleDocTemplate,Spacer, Table, TableStyle,Paragraph,Image,PageBreak
 from reportlab.pdfgen import canvas
@@ -38,6 +39,7 @@ from werkzeug.exceptions import BadRequestKeyError
 import os
 import io
 from io import BytesIO
+import time
 
 
 app = Flask(__name__,template_folder='templates')
@@ -52,7 +54,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = 'boolingsr@gmail.com'
-app.config['MAIL_PASSWORD'] = 'u u n e i j q s a f h c y th o​'
+app.config['MAIL_PASSWORD'] = 'z r s g s v l q d c n g l b e u'
 
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['MYSQL_HOST'] = 'localhost'
@@ -90,49 +92,36 @@ def inicio():
         return render_template('login/login.html', username=session['username'])
     return render_template('login/register.html')
 
-# Definir una tarea para enviar notificaciones
-def notify_job():    
-    try:
+# --- Tema Oscuro ---
+@app.route('/toggle_tema', methods=['POST'])
+def toggle_tema():
+    if 'loggedin' in session:
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM events")
-        events = cursor.fetchall()
-        current_date = datetime.now().date()
-        for event in events:
-            event_date = datetime.strptime(event['event_date'], "%Y-%m-%d").date()
-            if event_date >= current_date:
-                cursor.execute("SELECT email FROM user")
-                emails = cursor.fetchall()
-                for user_email in emails:
-                    send_notification(user_email['email'], event['name'], event['event_date'])
-    except Exception as e:
-        print("Error al procesar la notificación:", e)
-    finally:
+        cursor.execute("UPDATE user SET tema_oscuro = NOT tema_oscuro WHERE id = %s", 
+            (session['id'],))
+        mysql.connection.commit()
         cursor.close()
+        return jsonify({'success': True})
+    return jsonify({'success': False}), 401
 
-def send_notification(email, event_name, event_date):
-    try:
-        subject = f"Notificación de evento próximo: {event_name}"
-        body = f"Te recordamos que el evento '{event_name}' se llevará a cabo el {event_date}. ¡No te lo pierdas!"
-        # Crear el mensaje MIME
-        msg = MIMEText(body)
-        msg['Subject'] = subject
-        msg['From'] = 'boolingsr@gmail.com'
-        msg['To'] = email
-
-        with smtplib.SMTP('localhost', 25) as smtp:
-            # Enviar el mensaje    
-            smtp.send_message(msg)
-        print(f"Notificación enviada sobre el evento: {event_name} el {event_date} a {email}")
-    except Exception as e:
-        print("Error al enviar la notificación por correo electrónico:", e)
-
-# Crear un programador de tareas
-scheduler = BackgroundScheduler()
-scheduler.start()
-# Agendar la tarea de notificación para que se ejecute diariamente
-scheduler.add_job(notify_job, 'cron', minute='*', second='5')
-
-
+# --- Notificaciones ---
+@app.route('/actualizar_notificaciones', methods=['POST'])
+def actualizar_notificaciones():
+    if 'loggedin' in session:
+        data = request.get_json()
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            """UPDATE user SET 
+                notif_email = %s, 
+                notif_app = %s 
+            WHERE id = %s""",
+            (data.get('notif_email', True), 
+             data.get('notif_app', True), 
+             session['id']))
+        mysql.connection.commit()
+        cursor.close()
+        return jsonify({'success': True})
+    return jsonify({'success': False}), 401
 
 @app.route('/register', methods = ['GET','POST']) 
 def register():
@@ -178,7 +167,7 @@ def register():
 def send_notification_email(_email):
     sender_email = 'boolingsr@gmail.com'  # Cambia esto por tu dirección de correo electrónico
     receiver_email = _email  # La dirección de correo electrónico del usuario registrado
-    password = 'u u n e i j q s a f h c y th o​'
+    password = 'z r s g s v l q d c n g l b e u'
 
     # Crear el mensaje de correo electrónico
     message = MIMEMultipart()
@@ -259,7 +248,7 @@ def reset_request():
             # Enviar correo de restablecimiento de contraseña
             subject = 'Solicitud de restablecimiento de contraseña'  # Texto en español con 'ñ'
             sender_email = 'boolingsr@gmail.com'  # Cambia esto por tu dirección de correo
-            password = 'u u n e i j q s a f h c y th o'  # Usa la contraseña de aplicación generada
+            password = 'z r s g s v l q d c n g l b e u'  # Usa la contraseña de aplicación generada
             recipients = [email]
             reset_link = url_for("reset_password", email=email, _external=True)
             body = f'Haz clic en el siguiente enlace para restablecer tu contraseña: {reset_link}'  # Texto en español con 'ñ'
@@ -312,40 +301,60 @@ def reset_password(email):
 
 @app.route('/perfil')
 def perfil():
-    # Verifica que el usuario está logueado
     if 'username' not in session:
-        return redirect(url_for('access_login'))  # Redirige al login si no está logueado
+        return redirect(url_for('access_login'))
     
-    # Obtiene el nombre de usuario desde la sesión
     username = session['username']
     
-    # Consulta la base de datos para obtener los detalles del usuario logueado
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT * FROM user WHERE username = %s", (username,))
-    dato = cursor.fetchone()
+    user = cursor.fetchone()
+    
+    if not user:
+        cursor.close()
+        return redirect(url_for('access_login'))
 
-    # Consulta la base de datos para obtener las reservas del usuario
+    # Obtener reservas
     cursor.execute("""
-        SELECT r.id_event, r.number_of_reserved_tickets, r.date
-        FROM bookings r
-        WHERE r.id_user = %s
-    """, (dato['id'],))  # Usamos el 'id' del usuario para obtener sus reservas
+        SELECT 
+            e.id AS event_id,
+            e.name AS event_name,
+            e.image_url AS event_image,
+            b.number_of_reserved_tickets,
+            b.date AS reservation_date,
+            e.event_date AS date,
+            e.event_hour AS time,
+            e.category AS category_name
+        FROM bookings b
+        JOIN events e ON b.id_event = e.id
+        WHERE b.id_user = %s
+        ORDER BY b.date DESC
+    """, (user['id'],))
     reservations = cursor.fetchall()
 
+    # Obtener favoritos CORREGIDO
+    cursor.execute("""
+        SELECT 
+            e.id AS event_id, 
+            e.name AS event_name, 
+            e.image_url AS event_image,
+            e.event_date AS date, 
+            e.event_hour AS time,
+            e.category AS category_name,
+            f.created_at AS favorite_date
+        FROM favorites f
+        JOIN events e ON f.id_event = e.id
+        WHERE f.id_user = %s
+        ORDER BY f.created_at DESC
+    """, (user['id'],))
+    favorites = cursor.fetchall()
+    
     cursor.close()
-
-    # Renderiza el template de perfil con los datos del usuario y las reservas
-    return render_template('menu/perfil_usuario.html', user=dato, reservations=reservations)
-
-#         Desloguearse
-@app.route('/logout')
-def logout():
-    # Elimina el nombre de usuario de la sesión
-    session.pop('username', None)
-    session.pop('logueado', None)  # También puedes eliminar la variable 'logueado'
-    session.pop('id', None)
-    session.pop('id_role', None)
-    return redirect(url_for('access_login'))  # Redirige al login
+    
+    return render_template('menu/perfil_usuario.html', 
+                         user=user, 
+                         reservations=reservations,
+                         favorites=favorites)
 
 @app.route('/update_profile', methods=['POST'])
 def update_profile():
@@ -367,6 +376,274 @@ def update_profile():
     except Exception as e:
         flash(f'Error al actualizar el perfil: {str(e)}', 'danger')
         return redirect(url_for('perfil'))
+    
+
+@app.route('/add_favorite', methods=['POST'])
+def add_favorite():
+    if 'username' not in session:
+        return jsonify({'success': False, 'message': 'No autorizado'}), 401
+    
+    event_id = request.form.get('event_id')
+    user_id = session.get('id')
+    
+    cursor = mysql.connection.cursor()
+    
+    try:
+        # Verificar si ya es favorito primero
+        cursor.execute("SELECT * FROM favorites WHERE id_user = %s AND id_event = %s", 
+                      (user_id, event_id))
+        existing = cursor.fetchone()
+        
+        if existing:
+            # Si ya existe, eliminarlo (toggle)
+            cursor.execute("DELETE FROM favorites WHERE id_user = %s AND id_event = %s", 
+                         (user_id, event_id))
+            action = 'removed'
+            message = 'Eliminado de favoritos'
+        else:
+            # Si no existe, agregarlo
+            cursor.execute("INSERT INTO favorites (id_user, id_event) VALUES (%s, %s)", 
+                         (user_id, event_id))
+            action = 'added'
+            message = 'Añadido a favoritos'
+        
+        mysql.connection.commit()
+        
+        # Obtener datos actualizados del evento
+        cursor.execute("""
+            SELECT e.name, e.image_url, e.event_date, e.event_hour, e.category 
+            FROM events e WHERE e.id = %s
+        """, (event_id,))
+        event_data = cursor.fetchone()
+        
+        return jsonify({
+            'success': True,
+            'action': action,
+            'message': message,
+            'event': {
+                'id': event_id,
+                'name': event_data['name'],
+                'image': event_data['image_url'],
+                'date': event_data['event_date'].strftime('%Y-%m-%d') if event_data['event_date'] else None,
+                'time': str(event_data['event_hour']) if event_data['event_hour'] else None,
+                'category': event_data['category']
+            }
+        })
+        
+    except Exception as e:
+        mysql.connection.rollback()
+        # Manejar específicamente el error de duplicado
+        if "Duplicate entry" in str(e):
+            return jsonify({
+                'success': False,
+                'message': 'Este evento ya está en tus favoritos'
+            }), 400
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+        
+    finally:
+        cursor.close()
+
+
+@app.route('/check_favorites')
+def check_favorites():
+    if 'username' not in session:
+        return jsonify({'success': False, 'message': 'No autorizado'}), 401
+    
+    event_ids = request.args.get('ids', '').split(',')
+    if not event_ids or event_ids[0] == '':
+        return jsonify({'favorites': []})
+    
+    cursor = mysql.connection.cursor()
+    
+    try:
+        cursor.execute("SELECT id FROM user WHERE username = %s", (session['username'],))
+        user = cursor.fetchone()
+        
+        if not user:
+            return jsonify({'success': False, 'message': 'Usuario no encontrado'}), 404
+        
+        # Obtener los favoritos del usuario entre los eventos mostrados
+        cursor.execute("""
+            SELECT id_event FROM favorites 
+            WHERE id_user = %s AND id_event IN (%s)
+        """ % (user['id'], ','.join(['%s']*len(event_ids))), tuple(event_ids))
+        
+        favorites = [str(row['id_event']) for row in cursor.fetchall()]
+        
+        return jsonify({
+            'success': True,
+            'favorites': favorites
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al verificar favoritos: {str(e)}'
+        }), 500
+        
+    finally:
+        cursor.close()
+
+# Eliminar de favoritos (ya lo tienes, pero aquí está la versión corregida)
+@app.route('/eliminar_favorito', methods=['POST'])
+def eliminar_favorito():
+    if 'username' not in session:
+        return jsonify({'success': False, 'message': 'No autorizado'}), 401
+    
+    event_id = request.form.get('event_id')
+    username = session['username']
+    
+    cursor = mysql.connection.cursor()
+    
+    try:
+        # Obtener ID del usuario
+        cursor.execute("SELECT id FROM user WHERE username = %s", (username,))
+        user = cursor.fetchone()
+        
+        if not user:
+            return jsonify({'success': False, 'message': 'Usuario no encontrado'}), 404
+        
+        # Eliminar de favoritos
+        cursor.execute("DELETE FROM favorites WHERE id_user = %s AND id_event = %s", 
+                      (user['id'], event_id))
+        mysql.connection.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Evento eliminado de favoritos'
+        })
+        
+    except Exception as e:
+        mysql.connection.rollback()
+        return jsonify({
+            'success': False,
+            'message': f'Error al eliminar de favoritos: {str(e)}'
+        }), 500
+        
+    finally:
+        cursor.close()
+
+@app.route('/historial')
+def historial():
+    if 'username' not in session:
+        return redirect(url_for('access_login'))
+    
+    user_id = session.get('id')
+    
+    try:
+        with mysql.connection.cursor() as cursor:
+            # Consulta unificada que obtiene todos los tipos de historial
+            query = """
+            (SELECT 
+                e.id AS event_id,
+                e.name AS event_name,
+                IFNULL(e.image_url, 'default.jpg') AS event_image,
+                b.number_of_reserved_tickets,
+                b.date AS action_date,
+                e.event_date,
+                e.event_hour,
+                e.category,
+                'reserva' AS type,
+                NULL AS amount_paid,
+                NULL AS card_number
+            FROM bookings b
+            JOIN events e ON b.id_event = e.id
+            WHERE b.id_user = %s)
+            
+            UNION ALL
+            
+            (SELECT 
+                e.id AS event_id,
+                e.name AS event_name,
+                IFNULL(e.image_url, 'default.jpg') AS event_image,
+                NULL AS number_of_reserved_tickets,
+                f.created_at AS action_date,
+                e.event_date,
+                e.event_hour,
+                e.category,
+                'favorito' AS type,
+                NULL AS amount_paid,
+                NULL AS card_number
+            FROM favorites f
+            JOIN events e ON f.id_event = e.id
+            WHERE f.id_user = %s)
+            
+            UNION ALL
+            
+            (SELECT 
+                e.id AS event_id,
+                e.name AS event_name,
+                IFNULL(e.image_url, 'default.jpg') AS event_image,
+                NULL AS number_of_reserved_tickets,
+                p.payment_date AS action_date,
+                e.event_date,
+                e.event_hour,
+                e.category,
+                'pago' AS type,
+                p.amount_paid,
+                p.card_number
+            FROM payment p
+            JOIN events e ON p.evento_id = e.id
+            WHERE p.id_user = %s)
+            
+            ORDER BY action_date DESC
+            LIMIT 50
+            """
+            
+            cursor.execute(query, (user_id, user_id, user_id))
+            historial_data = cursor.fetchall()
+            
+            if not historial_data:
+                return render_template('menu/historial.html', 
+                                   historial=[],
+                                   user=session,
+                                   mensaje="No hay actividades recientes")
+            
+            # Procesar los datos para el template
+            processed_data = []
+            for item in historial_data:
+                entry = {
+                    'type': item['type'],
+                    'event_name': item['event_name'],
+                    'event_image': item['event_image'],
+                    'reservation_date': item['action_date'],
+                    'event_date': item['event_date'],
+                    'event_time': str(item['event_hour']) if item['event_hour'] else '',
+                    'category': item['category'] or 'General'
+                }
+                
+                # Campos específicos por tipo
+                if item['type'] == 'reserva':
+                    entry['number_of_reserved_tickets'] = item['number_of_reserved_tickets']
+                elif item['type'] == 'pago':
+                    entry['amount_paid'] = float(item['amount_paid']) if item['amount_paid'] else 0.0
+                    entry['card_number'] = item['card_number'][-4:] if item['card_number'] else '****'
+                
+                processed_data.append(entry)
+            
+            return render_template('menu/historial.html', 
+                               historial=processed_data,
+                               user=session)
+    
+    except Exception as e:
+        print(f"Error en /historial: {str(e)}")
+        return render_template('menu/historial.html', 
+                           historial=[],
+                           user=session,
+                           error="Error temporal al cargar el historial")
+#         Desloguearse
+@app.route('/logout')
+def logout():
+    # Elimina el nombre de usuario de la sesión
+    session.pop('username', None)
+    session.pop('logueado', None)  # También puedes eliminar la variable 'logueado'
+    session.pop('id', None)
+    session.pop('id_role', None)
+    return redirect(url_for('access_login'))  # Redirige al login
+
 
 #  Pagina del menu
 @app.route('/menu')
@@ -391,7 +668,7 @@ def contact():
         if not email:
             subject = 'Gracias Por contactarnos'
             sender_email = 'boolingsr@gmail.com'
-            password = 'u u n e i j q s a f h c y th o​'  # Update with your app password
+            password = 'z r s g s v l q d c n g l b e u​'  # Update with your app password
             recipients = [email]
             body = message
             
@@ -460,77 +737,6 @@ def talleres():
     cursor.close()
     return render_template('eventos/talleres.html', datos=datos)
 
-
-@app.route('/guardar_evento/<int:id>', methods=['GET'])
-def guardar_evento(id):
-    global eventos_guardados
-    # Verifica si el evento ya está guardado, si no lo está, agrégalo a la lista
-    if id not in eventos_guardados:
-        eventos_guardados.append(id)
-        # Inserta el evento guardado en la base de datos
-        cursor = mysql.connection.cursor()
-        cursor.execute("INSERT INTO eventos_guardados (evento_id) VALUES (%s)", (id,))
-        mysql.connection.commit()
-        cursor.close()
-        flash("El evento a sido agregado a favoritos")
-    return redirect(url_for('eventos_disponibles'))
-
-
-@app.route('/safe')
-def safe():
-    # Consulta para obtener los eventos guardados desde la base de datos
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT e.* FROM events e INNER JOIN eventos_guardados eg ON e.id = eg.evento_id")
-    eventos_guardados_datos = cursor.fetchall()
-    cursor.close()
-    return render_template('eventos/safe.html', eventos_guardados=eventos_guardados_datos)
-
-
-@app.route('/eliminar_evento/<int:evento_id>', methods=['POST'])
-def eliminar_evento(evento_id):
-    global eventos_guardados
-    if evento_id in eventos_guardados:
-        eventos_guardados.remove(evento_id)
-        # Elimina el evento guardado de la base de datos
-        cursor = mysql.connection.cursor()
-        cursor.execute("DELETE FROM eventos_guardados WHERE evento_id = %s", (evento_id,))
-        mysql.connection.commit()
-        cursor.close()
-        flash("El evento ha sido eliminado de favoritos")
-    return redirect(url_for('safe'))
-
-@app.route('/get_reservations', methods=['GET'])
-def get_reservations():
-    if 'logueado' in session:
-        user_id = session['id']
-        try:
-            cursor = mysql.connection.cursor()
-            cursor.execute("""
-                SELECT r.id_event, r.number_of_reserved_tickets, r.date
-                FROM reservations r
-                WHERE r.user_id = %s
-            """, (user_id,))
-            reservations = cursor.fetchall()
-            cursor.close()
-
-            # Preparar los datos para devolver
-            reservation_data = []
-            for reservation in reservations:
-                reservation_data.append({
-                    'id_event': reservation[0],
-                    'number_of_reserved_tickets': reservation[1],
-                    'date': reservation[2]
-                })
-
-            return jsonify(reservation_data)
-        except Exception as e:
-            print(f"Error: {e}")
-            return jsonify({'error': 'An error occurred while fetching reservations'}), 500
-    else:
-        return jsonify({'error': 'User not logged in'}), 401
-
-
-
 #       Carrito de los Eventos
 @app.route('/events', methods=['GET', 'POST'])
 def eventos_disponibles():
@@ -544,225 +750,501 @@ def eventos_disponibles():
 
 @app.route('/reservar_evento/<int:id>', methods=['GET', 'POST'])
 def reservar_evento(id):
+    if 'id' not in session:  # Asegúrate que el usuario está logueado
+        flash("Debes iniciar sesión para reservar", "error")
+        return redirect(url_for('access_login'))
+
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM events WHERE id = %s", (id,))
-    dato = cursor.fetchone()
+    
+    try:
+        # Verificar que el evento existe
+        cursor.execute("SELECT * FROM events WHERE id = %s", (id,))
+        dato = cursor.fetchone()
 
-    if not dato:
-        flash("Evento no encontrado.", "error")
+        if not dato:
+            flash("Evento no encontrado.", "error")
+            return redirect(url_for('eventos_disponibles'))
+
+        if request.method == 'POST':
+            # Validación básica
+            required_fields = ['nombre', 'email', 'tickets', 'date',
+                             'amount_paid', 'payment_date', 'card_number',
+                             'card_holder', 'card_expiry', 'card_cvv']
+            
+            for field in required_fields:
+                if field not in request.form or not request.form[field].strip():
+                    flash(f"Falta el campo: {field}", "error")
+                    return render_template('eventos/reservations.html', dato=dato)
+
+            try:
+                # Procesar datos
+                nombre = request.form['nombre']
+                email = request.form['email']
+                tickets = int(request.form['tickets'])
+                date = request.form['date']
+                price = request.form['amount_paid']
+                payment_date = request.form['payment_date']
+                user_id = session['id']  # ID del usuario logueado
+                
+                if tickets <= 0:
+                    flash("Número de tickets inválido", "error")
+                    return render_template('eventos/reservations.html', dato=dato)
+
+                # VERIFICAR QUE EL USUARIO EXISTE
+                cursor.execute("SELECT id FROM user WHERE id = %s", (user_id,))
+                if not cursor.fetchone():
+                    flash("Usuario no válido", "error")
+                    return redirect(url_for('access_login'))
+
+                # Insertar reserva
+                cursor.execute(
+                    """INSERT INTO bookings 
+                    (name_client, email_client, id_event, id_user, date, number_of_reserved_tickets) 
+                    VALUES (%s, %s, %s, %s, %s, %s)""",
+                    (nombre, email, id, user_id, date, tickets)
+                )
+                reservation_id = cursor.lastrowid
+
+                # Insertar pago (asegurando que id_user es válido)
+                cursor.execute(
+                    """INSERT INTO payment 
+                    (evento_id, id_user, amount_paid, payment_date, card_number, card_holder, card_expiry_date, card_cvv) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
+                    (id, user_id, price, payment_date, 
+                     request.form['card_number'], 
+                     request.form['card_holder'],
+                     request.form['card_expiry'],
+                     request.form['card_cvv'])
+                )
+
+                mysql.connection.commit()
+
+                # Generar factura
+                factura_filename = f"factura_{id}_{int(time.time())}.pdf"
+                factura_path = os.path.join(app.root_path, 'static', 'factura', factura_filename)
+                os.makedirs(os.path.dirname(factura_path), exist_ok=True)
+                create_invoice(factura_path, nombre, tickets, dato)
+                
+                # Generar ticket
+                ticket_filename, ticket_path = generate_ticket(
+                    reservation_id, 
+                    dato['name'],  # Nombre del evento
+                    nombre,        # Nombre del cliente
+                    tickets,       # Número de tickets
+                    dato['event_date'],  # Fecha del evento
+                    dato['event_hour'],  # Hora del evento
+                    dato['place']   # Lugar del evento (nuevo parámetro)
+                )
+                
+                # Guardar en sesión para descarga
+                session['pdf_filename'] = factura_filename
+                session['pdf_path'] = factura_path
+                session['ticket_filename'] = ticket_filename
+                session['ticket_path'] = ticket_path
+                session['email_cliente'] = email
+
+                # Enviar factura y ticket por correo
+                success, message = enviar_factura_y_ticket(email, factura_path, ticket_path)
+                
+                if success:
+                    flash("Reserva completada. Factura y ticket enviados a tu correo", "success")
+                else:
+                    flash(f"Reserva completada pero error al enviar documentos: {message}", "warning")
+
+                return redirect(url_for('confirmacion'))
+                
+            except ValueError:
+                mysql.connection.rollback()
+                flash("Datos numéricos inválidos", "error")
+                return render_template('eventos/reservations.html', dato=dato)
+                
+            except Exception as e:
+                mysql.connection.rollback()
+                flash(f"Error: {str(e)}", "error")
+                return render_template('eventos/reservations.html', dato=dato)
+
+        return render_template('eventos/reservations.html', dato=dato)
+
+    except Exception as e:
+        flash(f"Error inesperado: {str(e)}", "error")
         return redirect(url_for('eventos_disponibles'))
+    finally:
+        cursor.close()
 
-    if request.method == 'POST':
-        nombre = request.form['nombre']
-        email = request.form['email']
-        tickets = int(request.form['tickets'])
-        date = request.form['date']
-        price = request.form['amount_paid']
-        payment_date = request.form['payment_date']
-        card_number = request.form['card_number']
-        card_holder = request.form['card_holder']
-        card_expiry = request.form['card_expiry']
-        card_cvv = request.form['card_cvv']
 
-        if tickets <= 0:
-            flash("Número de tickets debe ser mayor a cero.", "error")
-            return render_template('eventos/reservations.html', dato=dato)
-
-        try:
-            # Obtener el id_user de la sesión
-            id_user = session['id']
-
-            # Después de que el usuario inicia sesión con éxito
-            cursor.execute(
-                "INSERT INTO bookings (name_client, email_client, id_event, id_user, date, number_of_reserved_tickets) VALUES (%s, %s, %s, %s, %s, %s)",
-                (nombre, email, id, id_user, date, tickets)
-            )
-
-            cursor.execute(
-                "INSERT INTO payment (evento_id, amount_paid, payment_date, card_number, card_holder, card_expiry_date, card_cvv) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                (id, price, payment_date, card_number, card_holder, card_expiry, card_cvv)
-            )
-
-            mysql.connection.commit()
-
-            # Remueve caracteres especiales del nombre del evento y lo normaliza
-            normalized_name = unicodedata.normalize('NFKD', dato['event_date']).encode('ascii', 'ignore').decode('utf-8')
-
-            # Reemplaza los caracteres no ASCII con un guion bajo
-            normalized_name = normalized_name.replace('/', '_')
-
-            file_path = 'static/factura/factura_{}_{}.pdf'.format(id, normalized_name)
-            session['pdf_path'] = file_path
-            session['email'] = email
-            create_invoice(file_path, nombre, tickets, dato, descuento=0.1)
-            return redirect(url_for('confirmacion'))
-        except Exception as e:
-            mysql.connection.rollback()
-            flash(str(e), "error")
-            return render_template('eventos/reservations.html', dato=dato)
-
-    return render_template('eventos/reservations.html', dato=dato)
-
-@app.route('/confirmacion',methods=['GET','POST'])
+@app.route('/confirmacion')
 def confirmacion():
-    # Suponiendo que la ruta del archivo PDF se guarda en la sesión
-    pdf_file_path = session.get('pdf_path')
-    return render_template('eventos/confirmacion.html', pdf_file_path=pdf_file_path)
+    if 'pdf_filename' not in session or 'ticket_filename' not in session:
+        flash("No hay documentos disponibles", "error")
+        return redirect(url_for('eventos_disponibles'))
+        
+    # Construir las rutas para los templates
+    factura_url = url_for('static', filename='factura/' + session['pdf_filename'])
+    ticket_url = url_for('static', filename='tickets/' + session['ticket_filename'])
+    
+    return render_template('eventos/confirmacion.html', 
+                         factura_file_path=factura_url,
+                         ticket_file_path=ticket_url)
+
+
+def enviar_factura_y_ticket(destinatario, factura_path, ticket_path):
+    """
+    Envía factura y ticket por email de forma segura
+    
+    Args:
+        destinatario (str): Email del destinatario
+        factura_path (str): Ruta al archivo PDF de factura
+        ticket_path (str): Ruta al archivo PDF de ticket
+    
+    Returns:
+        tuple: (success: bool, message: str)
+    """
+    # Configuración desde variables de entorno
+    email_user = os.getenv('EMAIL_USER', 'boolingsr@gmail.com')
+    email_password = os.getenv('EMAIL_APP_PASSWORD', 'z r s g s v l q d c n g l b e u')
+    
+    if not email_user or not email_password:
+        return False, "Configuración de email no encontrada"
+    
+    # Crear mensaje
+    msg = MIMEMultipart()
+    msg['From'] = email_user
+    msg['To'] = destinatario
+    msg['Subject'] = Header('Reserva Confirmada - Factura y Ticket', 'utf-8')
+    
+    # Cuerpo del mensaje
+    html = f"""
+    <html>
+        <body style="font-family: Arial, sans-serif;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd;">
+                <h2 style="color: #2c3e50;">¡Reserva Confirmada!</h2>
+                <p>Estimado cliente,</p>
+                <p>Adjunto encontrarás:</p>
+                <ul>
+                    <li>La factura de tu reserva</li>
+                    <li>Tu ticket de entrada (imprímelo o guárdalo en tu móvil)</li>
+                </ul>
+                <p>Fecha de envío: {datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
+                <br>
+                <p>Gracias por confiar en nosotros,</p>
+                <p><strong>Equipo Boolings Reserves</strong></p>
+                <p style="font-size: 12px; color: #7f8c8d;">
+                    Este es un mensaje automático, por favor no respondas directamente.
+                </p>
+            </div>
+        </body>
+    </html>
+    """
+    msg.attach(MIMEText(html, 'html'))
+    
+    # Adjuntar factura
+    try:
+        with open(factura_path, 'rb') as f:
+            part = MIMEApplication(f.read(), Name=os.path.basename(factura_path))
+        part['Content-Disposition'] = f'attachment; filename="Factura_{os.path.basename(factura_path)}"'
+        msg.attach(part)
+    except FileNotFoundError:
+        return False, "Archivo de factura no encontrado"
+    
+    # Adjuntar ticket
+    try:
+        with open(ticket_path, 'rb') as f:
+            part = MIMEApplication(f.read(), Name=os.path.basename(ticket_path))
+        part['Content-Disposition'] = f'attachment; filename="Ticket_{os.path.basename(ticket_path)}"'
+        msg.attach(part)
+    except FileNotFoundError:
+        return False, "Archivo de ticket no encontrado"
+    
+    # Enviar email
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(email_user, email_password)
+            server.send_message(msg)
+        return True, f"Documentos enviados a {destinatario}"
+    except smtplib.SMTPAuthenticationError:
+        return False, "Error de autenticación con Gmail"
+    except Exception as e:
+        return False, f"Error al enviar email: {str(e)}"
+
 
 @app.route('/enviar_factura')
 def enviar_factura():
-    email = session.get('email')
-    file_path = session.get('pdf_path')
-    enviar_email(email, file_path)
-    flash("Factura enviada con éxito.", "success")
+    if 'email_cliente' not in session or 'pdf_path' not in session:
+        flash("No se puede enviar la factura", "error")
+        return redirect(url_for('eventos_disponibles'))
+    
+    # Verificar si el archivo existe
+    if not os.path.exists(session['pdf_path']):
+        flash("El archivo de factura no existe", "error")
+        return redirect(url_for('eventos_disponibles'))
+    
+    # Enviar email
+    success, message = enviar_factura_y_ticket(session['email_cliente'], session['pdf_path'])
+    
+    if success:
+        flash(message, "success")
+    else:
+        flash(f"Error: {message}", "error")
+    
     return redirect(url_for('eventos_disponibles'))
 
 
-def enviar_email(email, file_path):
-    sender_email = 'boolingsr@gmail.com'
-    password = 'u u n e i j q s a f h c y th o​'
-
-    msg = MIMEMultipart()
-    msg['From'] = sender_email
-    msg['To'] = email
-    msg['Subject'] = "Reserva exitosa"
-
-    try:
-        # Adjuntar el PDF
-        with open(file_path, "rb") as f:
-            part = MIMEApplication(f.read(), Name=os.path.basename(file_path))
-        part['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(file_path)
-        msg.attach(part)
-
-        # Mensaje en el cuerpo del email
-        msg.attach(MIMEText("Aquí está su factura.", 'plain'))
-
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-            server.login(sender_email, password)
-            server.send_message(msg)
-        print("Correo electrónico enviado con éxito.")
-    except FileNotFoundError:
-        print(f"El archivo PDF no se encontró en la ruta especificada: {file_path}")
-        # Manejar el error de manera apropiada, por ejemplo, mostrar un mensaje al usuario o registrar el error
-    except Exception as e:
-        print(f"Error al enviar el correo electrónico: {e}")
-        # Manejar otros errores de manera apropiada
-
-
-# Definir el color para ;a factura
-dark_gold = colors.HexColor("#B08B12")
-elegantblue = colors.HexColor("#1B365D")
-
-
 def create_invoice(file_path, nombre, tickets, dato, descuento=0.1):
-     # Obtener la fecha actual
+    # Configuración inicial
     current_date = datetime.now().strftime("%d/%m/%Y")
+    width, height = letter
+    margin = 0.5 * inch
+    content_width = width - 2 * margin
 
-    # Crear el lienzo del PDF
-    c = canvas.Canvas(file_path, pagesize=letter)
-    width, height = letter  # Dimensiones de la página
+    # Colores modernos
+    primary_color = HexColor("#3498db")  # Azul brillante
+    secondary_color = HexColor("#2ecc71")  # Verde esmeralda
+    dark_color = HexColor("#2c3e50")     # Azul oscuro
+    light_color = HexColor("#ecf0f1")    # Gris claro
+    accent_color = HexColor("#e74c3c")    # Rojo
 
-    # Definir márgenes
-    overall_margin = 0.5 * inch
-    content_margin = 0.75 * inch  
-    footer_margin = 1.25 * inch  
-
-    # Dibujar un borde en color dark gold
-    c.setStrokeColor(dark_gold)
-    c.setLineWidth(1)
-    c.rect(overall_margin, overall_margin, width - 2 * overall_margin, height - 2 * overall_margin)
-
-    # Título de la factura y logo
-    title_position = height - overall_margin - 1.0 * inch
-    c.setFont('Helvetica-Bold', 16)
-    c.drawCentredString(width / 2.0, title_position, "Boolings Reserves")
-    logo_path = 'static/img/Boolings Reserves.png'
-    logo_size = 1.5 * inch  
-    logo_height_position = title_position - logo_size - 0.25 * inch
-    c.drawImage(logo_path, (width - logo_size) / 2, logo_height_position, width=logo_size, height=logo_size, preserveAspectRatio=True, mask='auto')
-
-    # Fecha actual en la parte superior derecha
-    c.setFont('Helvetica', 10)
-    c.drawRightString(width - content_margin, height - content_margin, f"Fecha: {current_date}")
-
-    # Información del cliente
-    client_info_position = logo_height_position - 0.75 * inch
-    c.setFont('Helvetica-Bold', 12)
-    c.drawString(content_margin, client_info_position, "Facturado a:")
-    c.setFont('Helvetica', 10)
-    client_name_position = client_info_position - 0.15 * inch
-    client_date_position = client_name_position - 0.15 * inch
-    c.drawString(content_margin, client_name_position, f"Nombre: {nombre}")
-    c.drawString(content_margin, client_date_position, f"Fecha del evento: {dato['price']}")
-
-    # Tabla de elementos de factura
-    table_width = width - 2 * content_margin
-    colWidths = [0.5 * table_width, 0.15 * table_width, 0.175 * table_width, 0.175 * table_width]
-    event_total = tickets * dato['price']
-    data = [
-        ["Descripción", "Cantidad", "Precio Unitario", "Total"],
-        ["Entrada al evento: " + dato['name'], tickets, f"${dato['price']:.2f}", f"${event_total:.2f}"]
-    ]
-    table = Table(data, colWidths=colWidths)
-    style = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, -1), 10),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
-        ('BOX', (0, 0), (-1, -1), 2, colors.black),
-        ('GRID', (0, 0), (-1, -1), 2, colors.black)
-    ])
-    table.setStyle(style)
-    table_start = client_date_position - 0.75 * inch
-    table.wrapOn(c, content_margin, table_start)
-    table.drawOn(c, content_margin, table_start)
-
-    # Calculando los totales
+    # Validar datos
+    event_name = dato.get('name', 'Evento Desconocido')
+    event_date = dato.get('date', 'Fecha no especificada')
+    event_price = float(dato.get('price', 0))
+    event_total = tickets * event_price
     total_descuento = event_total * descuento
     sub_total = event_total - total_descuento
-    total_final = sub_total
 
-    # Tabla de totales, alineada a la derecha bajo la tabla principal
-    data_totals = [
-        ["Descuento", f"${total_descuento:.2f}"],
-        ["Subtotal", f"${sub_total:.2f}"],
-        ["Total", f"${total_final:.2f}"]
-    ]
-    totals_table = Table(data_totals, colWidths=[1.0*inch, 1.0*inch])
-    totals_style = TableStyle([
-        ('ALIGN', (0, 0), (-1, -1), 'RIGHT'),
-        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 0), (-1, -1), 10),
-        ('BOX', (0, 0), (-1, -1), 2, colors.black),
-        ('GRID', (0, 0), (-1, -1), 2, colors.black)
-    ])
-    totals_table.setStyle(totals_style)
-    totals_table_position_x = content_margin + table_width - 2*inch  # Align right to the main table
-    totals_table_position_y = table_start + table._height + 0.1 * inch  # Below the main table
-    totals_table.wrapOn(c, totals_table_position_x, totals_table_position_y)
-    totals_table.drawOn(c, totals_table_position_x, totals_table_position_y)
+    # Crear PDF
+    c = canvas.Canvas(file_path, pagesize=letter)
+    
+    # --- Fondo degradado ---
+    c.setFillColor(light_color)
+    c.rect(0, 0, width, height, fill=1, stroke=0)
+    c.setFillColor(primary_color)
+    c.rect(0, height - inch, width, inch, fill=1, stroke=0)
 
-    # Información de la empresa en el pie de página
-    footer_line_position = footer_margin - 0.25 * inch
-    c.setStrokeColor(colors.grey)
-    c.line(content_margin, footer_line_position, width - content_margin, footer_line_position) 
-    c.setFont("Helvetica", 9)
-    footer_text = "Empresa Boolings Reserves - 173 Calle Pedernales Ensanche Espallait - +1 234 567 8900 - boolingsr@empresa.com"
-    c.drawCentredString(width / 2.0, footer_margin - 0.5 * inch, footer_text)  
-    c.setFont("Helvetica", 7)
-    c.drawCentredString(width / 2.0, footer_margin - 0.65 * inch, "© 2024 Boolings Reserves. Todos los derechos reservados.") 
+    # --- Encabezado moderno ---
+    logo_path = os.path.join(app.root_path, 'static', 'img', 'Boolings Reserves.png')
+    if os.path.exists(logo_path):
+        c.drawImage(logo_path, margin, height - margin - 0.8*inch, 
+                   width=1.5*inch, height=0.8*inch, 
+                   preserveAspectRatio=True, mask='auto')
+
+    # Información de la empresa
+    c.setFont('Helvetica-Bold', 16)
+    c.setFillColor(colors.white)
+    c.drawString(margin + 1.6*inch, height - margin - 0.3*inch, "BOOLINGS RESERVES")
+    
+    c.setFont('Helvetica', 9)
+    c.setFillColor(dark_color)
+    c.drawString(margin, height - margin - 1.1*inch, "173 Calle Pedernales, Ensanche Espallait")
+    c.drawString(margin, height - margin - 1.3*inch, "+1 234 567 8900 | boolingsr@empresa.com")
+    c.drawString(margin, height - margin - 1.5*inch, "www.boolingsreserves.com")
+
+    # Número de factura y fecha
+    invoice_number = f"INV-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+    c.setFont('Helvetica-Bold', 12)
+    c.setFillColor(dark_color)
+    c.drawRightString(width - margin, height - margin - 0.3*inch, f"FACTURA #{invoice_number}")
+    c.setFont('Helvetica', 10)
+    c.drawRightString(width - margin, height - margin - 0.6*inch, f"Fecha: {current_date}")
+
+    # --- Información del cliente ---
+    c.setFillColor(primary_color)
+    c.rect(margin, height - margin - 2*inch, content_width, 0.25*inch, fill=1, stroke=0)
+    
+    c.setFont('Helvetica-Bold', 12)
+    c.setFillColor(colors.white)
+    c.drawString(margin + 0.1*inch, height - margin - 1.9*inch, "INFORMACIÓN DEL CLIENTE")
+    
+    c.setFont('Helvetica', 10)
+    c.setFillColor(dark_color)
+    c.drawString(margin, height - margin - 2.3*inch, f"Nombre: {nombre}")
+    c.drawString(margin, height - margin - 2.5*inch, f"Evento: {event_name}")
+    c.drawString(margin, height - margin - 2.7*inch, f"Fecha del evento: {event_date}")
+    c.drawString(margin, height - margin - 2.9*inch, f"N° de tickets: {tickets}")
+
+    # --- Tabla de items ---
+    table_start = height - margin - 3.4*inch
+    
+    # Encabezado de la tabla
+    c.setFillColor(secondary_color)
+    c.rect(margin, table_start - 0.25*inch, content_width, 0.25*inch, fill=1, stroke=0)
+    
+    c.setFont('Helvetica-Bold', 10)
+    c.setFillColor(colors.white)
+    c.drawString(margin + 0.1*inch, table_start - 0.2*inch, "DESCRIPCIÓN")
+    c.drawString(margin + content_width*0.6, table_start - 0.2*inch, "CANTIDAD")
+    c.drawString(margin + content_width*0.75, table_start - 0.2*inch, "PRECIO")
+    c.drawString(margin + content_width*0.9, table_start - 0.2*inch, "TOTAL")
+
+    # Contenido de la tabla
+    c.setFont('Helvetica', 9)
+    c.setFillColor(dark_color)
+    
+    # Item 1
+    c.drawString(margin + 0.1*inch, table_start - 0.5*inch, f"Entrada general - {event_name}")
+    c.drawString(margin + content_width*0.6, table_start - 0.5*inch, str(tickets))
+    c.drawString(margin + content_width*0.75, table_start - 0.5*inch, f"${event_price:.2f}")
+    c.drawString(margin + content_width*0.9, table_start - 0.5*inch, f"${event_total:.2f}")
+    
+    # Descuento
+    c.setFillColor(accent_color)
+    c.drawString(margin + 0.1*inch, table_start - 0.8*inch, f"Descuento ({descuento*100}%)")
+    c.drawString(margin + content_width*0.9, table_start - 0.8*inch, f"-${total_descuento:.2f}")
+
+    # Línea divisoria
+    c.setStrokeColor(HexColor("#bdc3c7"))
+    c.setLineWidth(0.5)
+    c.line(margin, table_start - inch, width - margin, table_start - inch)
+
+    # --- Totales ---
+    c.setFont('Helvetica-Bold', 12)
+    c.setFillColor(dark_color)
+    
+    c.drawRightString(width - margin - 1.5*inch, table_start - 1.3*inch, "SUBTOTAL:")
+    c.drawRightString(width - margin - 1.5*inch, table_start - 1.6*inch, "DESCUENTO:")
+    c.drawRightString(width - margin - 1.5*inch, table_start - 1.9*inch, "TOTAL:")
+    
+    c.drawRightString(width - margin, table_start - 1.3*inch, f"${event_total:.2f}")
+    c.drawRightString(width - margin, table_start - 1.6*inch, f"-${total_descuento:.2f}")
+    
+    c.setFillColor(secondary_color)
+    c.drawRightString(width - margin, table_start - 1.9*inch, f"${sub_total:.2f}")
+
+    # Línea decorativa
+    c.setStrokeColor(primary_color)
+    c.setLineWidth(2)
+    c.line(width - margin - 3*inch, table_start - 2.1*inch, width - margin, table_start - 2.1*inch)
+
+    # --- Notas ---
+    c.setFont('Helvetica', 8)
+    c.setFillColor(dark_color)
+    notes_start = table_start - 2.5*inch
+    c.drawString(margin, notes_start, "NOTAS:")
+    c.drawString(margin, notes_start - 0.2*inch, "- Esta factura es válida como comprobante de pago.")
+    c.drawString(margin, notes_start - 0.4*inch, "- Presentar este documento al ingresar al evento.")
+    c.drawString(margin, notes_start - 0.6*inch, "- No se aceptan devoluciones ni cambios.")
+    c.drawString(margin, notes_start - 0.8*inch, "- Para consultas contacte a boolingsr@empresa.com")
+
+    # --- Pie de página ---
+    c.setFillColor(primary_color)
+    c.rect(0, 0, width, 0.8*inch, fill=1, stroke=0)
+    
+    c.setFont('Helvetica', 8)
+    c.setFillColor(colors.white)
+    c.drawCentredString(width/2, 0.5*inch, "Gracias por su preferencia!")
+    c.drawCentredString(width/2, 0.3*inch, "© 2024 Boolings Reserves. Todos los derechos reservados.")
 
     # Finalizar PDF
-    c.showPage()
     c.save()
 
-    # Verificar y crear el directorio si no existe
-    output_dir = os.path.dirname(file_path)
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+def generate_ticket(reservation_id, event_name, client_name, num_tickets, event_date, event_time, event_place):
+    """Genera un PDF con el ticket de reserva con diseño moderno y validación de datos"""
+    try:
+        # Validación de datos numéricos
+        if not isinstance(num_tickets, int) or num_tickets <= 0:
+            raise ValueError("Número de tickets inválido")
+        
+        if not reservation_id or not isinstance(reservation_id, (int, str)):
+            raise ValueError("ID de reserva inválido")
+
+        # Configuración del documento
+        ticket_filename = f"ticket_{reservation_id}.pdf"
+        ticket_path = os.path.join(app.root_path, 'static', 'tickets', ticket_filename)
+        logo_path = os.path.join(app.root_path, 'static', 'img', 'Boolings Reserves.png')
+        
+        os.makedirs(os.path.dirname(ticket_path), exist_ok=True)
+
+        # --- Paleta de colores mejorada ---
+        primary_color = "#22333b"   # Azul oscuro elegante
+        secondary_color = "#eae0d5" # Beige claro
+        accent_color = "#c6ac8f"    # Dorado suave
+        text_color = "#5e503f"      # Marrón oscuro
+
+        # --- Crear PDF ---
+        c = canvas.Canvas(ticket_path, pagesize=(3.5*inch, 6*inch))
+        width, height = 3.5*inch, 6*inch
+
+        # --- Fondo con diseño moderno ---
+        c.setFillColor(secondary_color)
+        c.rect(0, 0, width, height, fill=1, stroke=0)
+        
+        # Elementos decorativos
+        c.setFillColor(accent_color)
+        c.rect(0, height-0.5*inch, width, 0.5*inch, fill=1, stroke=0)
+
+        # --- Cabecera ---
+        try:
+            c.drawImage(logo_path, width/2-1.0*inch, height-1.2*inch, 
+                       width=2.0*inch, height=0.7*inch, 
+                       preserveAspectRatio=True, mask='auto')
+        except:
+            c.setFont("Helvetica-Bold", 16)
+            c.setFillColor(primary_color)
+            c.drawCentredString(width/2, height-1.0*inch, "BOOLINGS RESERVES")
+
+        # --- Información principal ---
+        c.setFont("Helvetica-Bold", 14)
+        c.setFillColor(primary_color)
+        c.drawCentredString(width/2, height-1.6*inch, "ENTRADA CONFIRMADA")
+        
+        # Validar y formatear fecha
+        formatted_date = event_date.strftime('%d/%m/%Y') if hasattr(event_date, 'strftime') else str(event_date)
+        formatted_time = str(event_time) if event_time else "Por confirmar"
+
+        # --- Detalles en formato de tabla ---
+        details = [
+            ("Evento:", event_name.upper(), 0.3*inch, height-2.2*inch),
+            ("Cliente:", client_name, 0.3*inch, height-2.6*inch),
+            ("Fecha:", formatted_date, 0.3*inch, height-3.0*inch),
+            ("Hora:", formatted_time, width/2, height-2.6*inch),
+            ("Lugar:", event_place, width/2, height-3.0*inch),
+            ("Entradas:", str(num_tickets), 0.3*inch, height-3.4*inch)
+        ]
+
+        c.setFont("Helvetica-Bold", 10)
+        c.setFillColor(text_color)
+        for label, value, x, y in details:
+            c.drawString(x, y, label)
+            c.setFont("Helvetica", 10)
+            c.drawString(x + 0.8*inch if x < width/2 else x + 0.6*inch, y, str(value))
+            c.setFont("Helvetica-Bold", 10)
+
+        # --- Código QR con ID de reserva ---
+        qr_size = 1.2*inch
+        qr_y = height-4.8*inch
+        c.setFillColor(secondary_color)
+        c.roundRect(width/2-qr_size/2, qr_y, qr_size, qr_size, 8, fill=1, stroke=1)
+        
+        c.setFont("Helvetica", 8)
+        c.setFillColor(primary_color)
+        c.drawCentredString(width/2, qr_y+qr_size+0.2*inch, f"ID RESERVA: {reservation_id}")
+
+        # --- Footer ---
+        c.setFillColor(accent_color)
+        c.rect(0, 0, width, 0.3*inch, fill=1, stroke=0)
+        c.setFont("Helvetica", 7)
+        c.setFillColor(primary_color)
+        c.drawCentredString(width/2, 0.1*inch, "Reserva completada • Factura enviada por correo")
+
+        c.save()
+        
+        return ticket_filename, ticket_path
+
+    except Exception as e:
+        print(f"Error generando ticket: {str(e)}")
+        # Generar ticket de error como respaldo
+        error_filename = f"error_ticket_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        error_path = os.path.join(app.root_path, 'static', 'tickets', error_filename)
+        
+        c = canvas.Canvas(error_path, pagesize=(3.5*inch, 6*inch))
+        c.setFont("Helvetica-Bold", 14)
+        c.drawString(0.5*inch, 5*inch, "ERROR EN LA RESERVA")
+        c.setFont("Helvetica", 10)
+        c.drawString(0.5*inch, 4.5*inch, "Los datos de reserva no son válidos")
+        c.drawString(0.5*inch, 4*inch, f"Error: {str(e)}")
+        c.drawString(0.5*inch, 3*inch, "Por favor contacta al soporte técnico")
+        c.save()
+        
+        return error_filename, error_path
 
 @app.route('/cotizacion')
 def cotizacion():
@@ -824,37 +1306,32 @@ def edit(id):
     return render_template('admin/eventos.html', dato=evento)
 
 def notify_users(name):
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT email FROM user")
-    email = cursor.fetchall()
-    # Configura los detalles del correo electrónico
-    sender_email = "boolingsr@gmail.com"
-    recipient_email = email
-    subject = "Evento Actualizado"
-    body = f"El evento '{name}' ha sido actualizado."
+    try:
+        # 1. Obtener emails de la base de datos
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT email FROM user")
+        emails = [email[0] for email in cursor.fetchall()]
+        cursor.close()
 
-    # Crea un mensaje multipart
-    msg = MIMEMultipart()
-    msg['From'] = sender_email
-    msg['To'] = recipient_email
-    msg['Subject'] = subject
+        if not emails:
+            return
 
-    # Agrega el cuerpo del mensaje
-    msg.attach(MIMEText(body, 'plain'))
+        # 2. Configurar mensaje
+        msg = MIMEMultipart()
+        msg['From'] = "boolingsr@gmail.com"
+        msg['To'] = ", ".join(emails)
+        msg['Subject'] = "Evento Actualizado"
+        msg.attach(MIMEText(f"El evento '{name}' ha sido actualizado.", 'plain'))
 
-    # Configura el servidor SMTP
-    smtp_server = "smtp.gmail.com"
-    smtp_port = 587
-    smtp_username = "boolingsr@gmail.com"
-    smtp_password = 'u u n e i j q s a f h c y th o​'  # Asegúrate de usar una contraseña segura o token de aplicación
-
-    # Inicia una conexión SMTP segura
-    with smtplib.SMTP(smtp_server, smtp_port) as server:
-        server.starttls()
-        server.login(smtp_username, smtp_password)
-        # Codifica el mensaje como UTF-8
-        text = msg.as_string().encode('utf-8')
-        server.sendmail(sender_email, recipient_email, text)
+        # 3. Configurar SMTP (con contraseña de aplicación)
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.ehlo()
+            server.starttls()
+            server.login("boolingsr@gmail.com", "z r s g s v l q d c n g l b e u")
+            server.send_message(msg)
+            
+    except Exception as e:
+        print(f"Error de notificación: {str(e)}")
 
 @app.route('/delete/<int:id>', methods=['POST'])
 def delete(id):
@@ -1034,78 +1511,133 @@ def obtener_usuarios():
     cursor.close()
     return usuarios
 
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Image
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from datetime import datetime
+from reportlab.lib.units import inch
+
 def generar_reporte_usuarios():
     # Obtener los datos de los usuarios desde la base de datos MySQL
     usuarios = obtener_usuarios()
 
-    # Crear el documento PDF
-    pdf_filename = "reporte_usuarios.pdf"
-    pdf = SimpleDocTemplate(pdf_filename, pagesize=letter)
+    # Configuración del documento
+    pdf_filename = "reporte_usuarios_moderno.pdf"
+    pdf = SimpleDocTemplate(pdf_filename, pagesize=letter, 
+                          rightMargin=40, leftMargin=40,
+                          topMargin=80, bottomMargin=40)
 
-    # Estilos
-    estilo_titulo = getSampleStyleSheet()["Title"]
+    # Estilos modernos
+    styles = getSampleStyleSheet()
+    
+    # Estilo para el título
+    estilo_titulo = ParagraphStyle(
+        name="TituloModerno",
+        fontSize=24,
+        leading=30,
+        textColor=colors.HexColor("#2c3e50"),
+        fontName="Helvetica-Bold",
+        alignment=TA_CENTER
+    )
+    
+    # Estilo para subtítulos
+    estilo_subtitulo = ParagraphStyle(
+        name="SubtituloModerno",
+        parent=styles["Normal"],
+        fontSize=12,
+        textColor=colors.HexColor("#7f8c8d"),
+        alignment=TA_CENTER,
+        spaceAfter=20
+    )
+    
+    # Estilo para contenido
+    estilo_contenido = ParagraphStyle(
+        name="ContenidoModerno",
+        parent=styles["Normal"],
+        fontSize=10,
+        textColor=colors.HexColor("#34495e"),
+        leading=14,
+        spaceAfter=10
+    )
+    
+    # Estilo para el pie de página
+    estilo_pie = ParagraphStyle(
+        name="PieModerno",
+        parent=styles["Normal"],
+        fontSize=8,
+        textColor=colors.HexColor("#95a5a6"),
+        alignment=TA_CENTER
+    )
 
-    estilo_subtitulo = ParagraphStyle(name="Subtitulo", parent=estilo_titulo)
-    estilo_subtitulo.fontSize = 12
-
-    estilo_contenido = ParagraphStyle(name="Contenido")
-    estilo_contenido.alignment = TA_LEFT
-
-    # Encabezado
-    titulo = Paragraph("Reporte de Usuarios", estilo_titulo)
-
-    # Logo
-    logo = "static/img/Boolings Reserves.png"  # Cambia esto por la ruta de tu logo
-    imagen_logo = Image(logo, width=200, height=100)
-
+    # Encabezado con logo y título
+    logo = "static/img/Boolings Reserves.png"
+    imagen_logo = Image(logo, width=2*inch, height=1*inch)
+    imagen_logo.hAlign = 'CENTER'
+    
+    titulo = Paragraph("REPORTE DE USUARIOS", estilo_titulo)
+    subtitulo = Paragraph("Información detallada de usuarios registrados", estilo_subtitulo)
+    
+    # Fecha de generación
+    fecha_actual = datetime.now().strftime("%d de %B de %Y - %H:%M")
+    fecha_texto = Paragraph(f"Generado el {fecha_actual}", estilo_subtitulo)
+    
     # Descripción
-    descripcion = "Este reporte muestra información detallada de los usuarios registrados en el sistema."
-
-    # Pie de página
-    fecha_actual = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    pie_pagina = Paragraph(f"Generado por Boolings Reserves {fecha_actual}", estilo_contenido)
-
-    # Tabla de datos
-    data = [["ID", "Nombre", "Email"]]
+    descripcion = Paragraph("""
+    Este documento contiene la lista completa de usuarios registrados en el sistema Boolings Reserves, 
+    mostrando información relevante como identificador, nombre de usuario y correo electrónico.
+    """, estilo_contenido)
+    
+    # Tabla de datos con diseño moderno
+    data = [["ID", "NOMBRE", "EMAIL"]]
     for usuario in usuarios:
         data.append([usuario["id"], usuario["username"], usuario["email"]])
-    tabla = Table(data)
-
-    # Estilo de la tabla
-    style = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.darkblue),
+    
+    tabla = Table(data, colWidths=[0.8*inch, 2*inch, 3.5*inch], repeatRows=1)
+    
+    # Estilo de tabla moderno
+    estilo_tabla = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#3498db")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 11),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
-        ('GRID', (0, 0), (-1, -1), 1, colors.lightgrey),
-        ('FONTSIZE', (0, 0), (-1, -1), 10),
-        ('INNERGRID', (0, 0), (-1, -1), 1, colors.lightgrey)
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#ecf0f1")),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#bdc3c7")),
+        ('FONTSIZE', (0, 1), (-1, -1), 9),
+        ('LEFTPADDING', (0, 0), (-1, -1), 4),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 4),
     ])
-    tabla.setStyle(style)
-
-    # Agregar elementos al PDF
-
-    elements = [
-    imagen_logo,
-    titulo,
-    Spacer(0, 10),
-    Paragraph(descripcion, estilo_contenido),  # Aplicar estilo aquí
-    Spacer(0, 10),
-    tabla,
-    Spacer(0, 20),
-    pie_pagina
+    
+    # Alternar colores de filas para mejor legibilidad
+    for i in range(1, len(data)):
+        if i % 2 == 0:
+            estilo_tabla.add('BACKGROUND', (0, i), (-1, i), colors.HexColor("#ffffff"))
+    
+    tabla.setStyle(estilo_tabla)
+    
+    # Pie de página
+    pie_pagina = Paragraph(f"Boolings Reserves · Página 1 · {datetime.now().strftime('%d/%m/%Y')}", estilo_pie)
+    
+    # Construcción del documento
+    elementos = [
+        imagen_logo,
+        Spacer(1, 0.2*inch),
+        titulo,
+        fecha_texto,
+        Spacer(1, 0.3*inch),
+        descripcion,
+        Spacer(1, 0.4*inch),
+        tabla,
+        Spacer(1, 0.5*inch),
+        pie_pagina
     ]
-
-
-    # Ajustar márgenes
-    pdf.topMargin = 50
-    pdf.bottomMargin = 50
-
-    # Generar el PDF
-    pdf.build(elements)
-
+    
+    # Generar PDF
+    pdf.build(elementos)
+    
     return pdf_filename
 
 

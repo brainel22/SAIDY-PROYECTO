@@ -1,100 +1,205 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Josefin+Sans:wght@400;500;600&display=swap");
 
-/*========== VARIABLES CSS ==========*/
+/*========== VARIABLES CSS ACTUALIZADAS ==========*/
 :root {
     --header-height: 3.5rem;
     --nav-width: 219px;
-        --dark-gold-color: #B08B12;
-        /* Oro oscuro, elegante */
-        --elegant-blue: #1B365D;
-        /* Azul elegante, un tono profundo y sereno */
-        --blueberry-cranberry: #4E4C7F;
-        /* Arándano azul, un tono azul oscuro con matices púrpuras */
-        --title-color: #FFFFFF;
-        /* Blanco para títulos */
-        --text-color: #1B365D;
-        /* Azul elegante para texto principal */
-        --text-color-light: #B08B12;
-        /* Oro oscuro para textos secundarios y acentos */
-        --body-color: #FFFFFF;
-        /* Fondo del cuerpo en blanco */
-        --container-color: #E6EBF0;
-        /* Color de contenedor en un tono claro y neutro */
+
+    /* Nueva paleta orgánica moderna */
+    --black: #0a0908ff;
+    --gunmetal: #22333bff;
+    --almond: #eae0d5ff;
+    --khaki: #c6ac8fff;
+    --walnut-brown: #5e503fff;
+
+    --title-color: #FFFFFF;
+    --text-color: #5e503fff;
+    /* walnut-brown para texto principal */
+    --text-color-light: #c6ac8fff;
+    /* khaki para textos secundarios */
+    --body-color: #eae0d5ff;
+    /* almond como fondo del cuerpo */
+    --container-color: #c6ac8fff;
+    /* khaki para contenedores */
+
+    /* Bordes y sombras */
+    --radius: 16px;
+    --shadow: 0 8px 24px rgba(94, 80, 63, 0.12);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
+
+/*========== ESTILOS GENERALES ==========*/
+body {
+    font-family: 'Josefin Sans', sans-serif;
+    background-color: var(--body-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    padding: 2rem;
+}
+
 .container-card {
     width: 100%;
-    display: flex;
-    max-width: 1100px;
-    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
 }
 
 .title-cards {
     width: 100%;
-    max-width: 1080px;
-    margin: auto;
-    padding: 20px;
-    margin-top: 20px;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
     text-align: center;
-    color: var(--elegant-blue);
+    color: var(--text-color);
+    position: relative;
 }
 
+.title-cards h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.5px;
+}
+
+.title-cards::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--walnut-brown), var(--khaki));
+    margin: 1rem auto 0;
+    border-radius: 2px;
+}
+
+/*========== TARJETAS ==========*/
 .card {
-    width: 100%;
-    margin: 20px;
-    border-radius: 6px;
-    overflow: hidden;
     background: var(--container-color);
-    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
-    transition: all 400ms ease-out;
-    cursor: default;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+    border: 1px solid rgba(94, 80, 63, 0.1);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--walnut-brown), var(--khaki));
 }
 
 .card:hover {
-    box-shadow: 5px 5px 20px color var(--container-color);
-    transform: translateY(-3%);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 28px rgba(94, 80, 63, 0.2);
 }
 
-
 .card .contenido-card {
-    padding: 15px;
+    padding: 2rem;
     text-align: center;
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 .card .contenido-card h3 {
-    margin-bottom: 15px;
-    color: var(--elegant-blue);
+    margin-bottom: 1.5rem;
+    color: var(--walnut-brown);
+    font-size: 1.5rem;
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
 }
 
-.card .contenido-card p,li {
+.card .contenido-card h3::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: var(--khaki);
+}
+
+.card .contenido-card p,
+.card .contenido-card li {
     line-height: 1.8;
-    color: black;
-    font-size: 14px;
-    margin-bottom: 5px;
+    color: var(--gunmetal);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.card .contenido-card ul {
+    padding-left: 1.5rem;
+    text-align: left;
 }
 
 .card .contenido-card a {
-    display: inline-block;
-    padding: 10px;
-    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 1.8rem;
+    margin-top: 1.5rem;
     text-decoration: none;
-    color: #fff;
-    border: 1px solid #FDFDFD;
-    border-radius: 4px;
-    transition: all 400ms ease;
-    margin-bottom: 5px;
+    color: var(--almond);
+    background: linear-gradient(135deg, var(--walnut-brown), var(--khaki));
+    border-radius: 50px;
+    transition: var(--transition);
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(94, 80, 63, 0.2);
+    border: none;
 }
 
 .card .contenido-card a:hover {
-    background: #ED3E90;
-    color: #fff;
+    background: linear-gradient(135deg, var(--gunmetal), var(--walnut-brown));
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(34, 51, 59, 0.3);
 }
 
-@media only screen and (min-width:320px) and (max-width:768px) {
+/*========== RESPONSIVE ==========*/
+@media (max-width: 768px) {
     .container-card {
-        flex-wrap: wrap;
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .title-cards h2 {
+        font-size: 2rem;
     }
 
     .card {
-        margin: 15px;
+        margin: 0 0 1.5rem 0;
     }
+}
+
+/*========== EFECTOS ESPECIALES ==========*/
+.card {
+    perspective: 1000px;
+}
+
+.card-inner {
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.card:hover .card-inner {
+    transform: rotateY(5deg) rotateX(5deg);
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(198, 172, 143, 0.1) 0%, rgba(94, 80, 63, 0.05) 100%);
+    z-index: -1;
+    pointer-events: none;
 }

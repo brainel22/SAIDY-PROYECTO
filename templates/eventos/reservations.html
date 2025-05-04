@@ -1,77 +1,185 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
+    <link rel="icon" href="{{ url_for('static', filename='img/Boolings Reserves.png') }}" type="image/png">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservar Evento</title>
-    <link rel="stylesheet" href="{{url_for('static',filename='css/reservation.css')}}">
+    <title>Reserva - {{dato.name}}</title>
+        <link rel="stylesheet" href="{{url_for ('static',filename = 'css/reservation.css')}}">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
-{% if error %}
-    <div>{{ error }}</div>
-{% endif %}
-
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-        {% for message in messages %}
+    <div class="container">
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-messages">
+    {% for message in messages %}
+    <div class="flash-message alert-dismissible fade show" role="alert">
         {{ message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {% endfor %}
+        <button type="button" class="close-btn" aria-label="Close">&times;</button>
     </div>
-    {% endif %}
-    {% endwith %}
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
 
-<form action="{{ url_for('reservar_evento', id=dato.id) }}" method="post">
-    <h1>Haz tu reserva</h1>
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required><br><br>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required><br><br>
-    <label for="tickets">Número de Tickets:</label>
-    <input type="number" id="tickets" name="tickets" required><br><br>
-    <label for="date">Fecha:</label>
-    <input type="date" id="date" name="date" value="{{dato.event_date}}" required><br><br>
-    <h3>Pasarela de pago</h3>
-    <input type="hidden" name="id" value="{{ id }}">
-    <label for="amount_paid">Monto a Pagar:</label>
-    <input type="number" value="{{dato.price}}" id="amount_paid" name="amount_paid" required><br><br>
-    <label for="payment_date">Fecha de Pago:</label>
-    <input type="date" id="payment_date" name="payment_date" placeholder="D/M/Y" required><br><br>
-    <label for="card_number">Número de Tarjeta:</label>
-    <input type="text" id="card_number" name="card_number" placeholder="1234 5678 9012 3456" required><br><br>
-    <label for="card_holder">Titular de la Tarjeta:</label>
-    <input type="text" id="card_holder" name="card_holder" required><br><br>
-    <label for="card_expiry">Fecha de Expiración:</label>
-    <input type="date" id="card_expiry" name="card_expiry" required><br><br>
-    <label for="card_cvv">CVV:</label>
-    <input type="text" id="card_cvv" name="card_cvv" placeholder="CVV" required><br><br>  
-    <button type="submit">Pagar</button>
-    <a href="{{url_for('eventos_disponibles')}}">Regresar</a>
+        <div class="reservation-card">
+            <div class="reservation-header">
+                <h1>{{dato.name}}</h1>
+            </div>
 
+            <div class="reservation-body">
+                <form action="{{ url_for('reservar_evento', id=dato.id) }}" method="post">
+                    <img src="{{ dato.image_url}}" alt="">
+                    <input type="hidden" name="id" value="{{ id }}">
+                    <h2 class="section-title">Información Personal</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nombre">Nombre completo</label>
+                            <input type="text" id="nombre" name="nombre" required>
+                        </div>
 
-  
-</form>
-<script>
-    // Función para abrir el modal
-    function openModal() {
-        document.getElementById('myModal').style.display = 'block';
-    }
+                        <div class="form-group">
+                            <label for="email">Correo electrónico</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
 
-    // Función para cerrar el modal
-    function closeModal() {
-        document.getElementById('myModal').style.display = 'none';
-    }
+                        <div class="form-group">
+                            <label for="tickets">Número de tickets</label>
+                            <input type="number" id="tickets" name="tickets" min="1" required>
+                        </div>
 
-    // Cerrar el modal haciendo clic fuera del contenido
-    window.onclick = function (event) {
-        var modal = document.getElementById('myModal');
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    }
-</script>
+                        <div class="form-group">
+                            <label for="date_false">Fecha del evento</label>
+                            <input type="date" id="date_false"
+                                data-event-date="{{ dato.event_date.strftime('%Y-%m-%d') if dato.event_date else '' }}">
+
+                            <input type="hidden" id="date" name="date"> <!-- Este campo se enviará al servidor -->
+                        </div>
+                    </div>
+                    <h2 class="section-title">Información de Pago</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="amount_paid">Monto</label>
+                            <input type="number" id="amount_paid" name="amount_paid" value="{{dato.price}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="payment_date">Fecha de pago</label>
+                            <input type="date" id="payment_date" name="payment_date" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="card_number">Número de tarjeta</label>
+                            <input type="text" id="card_number" name="card_number" placeholder="1234 5678 9012 3456"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="card_holder">Nombre en la tarjeta</label>
+                            <input type="text" id="card_holder" name="card_holder" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="card_expiry">Fecha de expiración</label>
+                            <input type="month" id="card_expiry" name="card_expiry" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="card_cvv">Código CVV</label>
+                            <input type="text" id="card_cvv" name="card_cvv" placeholder="123" maxlength="4" required>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <a href="{{url_for('eventos_disponibles')}}" class="btn btn-outline">
+                            ← Volver
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            Confirmar Reserva →
+                        </button>
+                    </div>
+                </form>                        
+            </div>
+        </div>
+    </div>
+    <script src="{{url_for('static', filename = 'js/reservations.js')}}"></script>
+ <script>
+    // Configuración inicial al cargar la página
+        document.addEventListener('DOMContentLoaded', function () {
+            // Obtener fecha actual en formato YYYY-MM-DD
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+
+            // 1. Configurar campo visible (date_false)
+            const dateVisible = document.getElementById('date_false');
+            dateVisible.min = todayStr;
+
+            // 2. Configurar campo oculto (date) con fecha actual
+            const dateHidden = document.getElementById('date');
+            dateHidden.value = todayStr; // Siempre guardará la fecha actual
+
+            // 3. Configurar campo de pago (payment_date)
+            const paymentDate = document.getElementById('payment_date');
+            paymentDate.min = todayStr;
+            paymentDate.value = todayStr;
+
+            // Si hay una fecha de evento, mostrarla en el campo visible
+            if (dateVisible.dataset.eventDate) {
+                dateVisible.value = dateVisible.dataset.eventDate;
+            }
+        });
+
+        // Validación del formulario
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const dateVisible = document.getElementById('date_false');
+            const today = new Date().toISOString().split('T')[0];
+
+            // Validar que se haya seleccionado fecha visible
+            if (!dateVisible.value) {
+                alert('Debes seleccionar una fecha para el evento');
+                e.preventDefault();
+                return;
+            }
+
+            // Validar que la fecha visible no sea anterior a hoy
+            if (dateVisible.value < today) {
+                alert('La fecha del evento no puede ser anterior a hoy');
+                e.preventDefault();
+                return;
+            }
+
+            // El campo oculto 'date' ya tiene la fecha actual y siempre será válido
+        });
+
+        // Formatear número de tarjeta (manteniendo espacios cada 4 dígitos)
+        document.getElementById('card_number').addEventListener('input', function (e) {
+            this.value = this.value.replace(/\s/g, '')
+                .replace(/(\d{4})/g, '$1 ')
+                .trim();
+        });
+
+        // Validar CVV (solo números, máximo 4 dígitos)
+        document.getElementById('card_cvv').addEventListener('input', function (e) {
+            this.value = this.value.replace(/\D/g, '')
+                .substring(0, 4);
+        });
+
+        // Cerrar alertas con animación
+        document.querySelectorAll('.close').forEach(button => {
+            button.addEventListener('click', function () {
+                this.parentElement.style.transition = 'all 0.3s ease';
+                this.parentElement.style.opacity = '0';
+                setTimeout(() => {
+                    this.parentElement.remove();
+                }, 300);
+            });
+        });
+ </script>
 </body>
+
 </html>

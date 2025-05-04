@@ -4,143 +4,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usuarios</title>
+    <title>Eventos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename = 'css/menu_admin.css')}}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 
     <!-- Agrega tus estilos CSS aquí -->
     <style>
-:root{
-    /*========== Colors ==========*/
-        --dark-gold-color: #B08B12;
-        /* Oro oscuro, elegante */
-        --elegant-blue: #1B365D;
-        /* Azul elegante, un tono profundo y sereno */
-        --blueberry-cranberry: #4E4C7F;
-        /* Arándano azul, un tono azul oscuro con matices púrpuras */
-        --title-color: #FFFFFF;
-        /* Blanco para títulos */
-        --text-color: #1B365D;
-        /* Azul elegante para texto principal */
-        --text-color-light: #B08B12;
-        /* Oro oscuro para textos secundarios y acentos */
-        --body-color: #FFFFFF;
-        /* Fondo del cuerpo en blanco */
-        --container-color: #E6EBF0;
-    --font: "Josefin Sans", sans-serif
+/* Estilos para los modales */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: var(--z-fixed);
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(10, 36, 99, 0.7); /* Using --black with opacity */
 }
 
-        h2 {
-            text-align: center;
-            margin-top: 20px;
-            font-family: var(--font);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            font-family: var(--font);
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid var(--dark-gold-color);
-        }
-        th {
-            background-color: #f2f2f2;
-            color: #333;
-            font-weight: bold;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        tr:hover {
-            background-color: #ddd;
-        }
-img {
-    max-width: 100px;
+.modal-content {
+    background-color: var(--body-color); /* Using almond */
+    margin: 10% auto;
+    padding: 25px;
+    border: 2px solid var(--khaki);
+    width: 60%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(34, 51, 59, 0.2); /* Using gunmetal with opacity */
 }
-/* Estilos para el enlace de editar */
-.link-editar {
-    color: var(--elegant-blue);
-    /* Color azul para enlaces */
+
+.modal-header {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--khaki);
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    color: var(--gunmetal);
+    font-size: 1.5rem;
+    font-weight: var(--font-semi-bold);
+    margin: 0;
+}
+
+.close {
+    color: var(--khaki);
+    float: right;
+    font-size: 1.8rem;
+    font-weight: var(--font-semi-bold);
+    line-height: 1;
+}
+
+.close:hover,
+.close:focus {
+    color: var(--walnut-brown);
     text-decoration: none;
-    /* Eliminar subrayado */
-    margin-right: 10px;
-    /* Margen a la derecha para separarlo del botón */
-    font-weight: bold;
-    /* Hacer el texto negrita */
-}
-
-.link-editar:hover {
-    text-decoration: underline;
-    /* Subrayar al pasar el ratón */
-}
-
-/* Estilos para el formulario y botón de eliminar */
-.form-eliminar {
-    display: inline;
-    /* Asegura que el formulario se muestre en línea con el enlace */
-}
-
-.btn-eliminar {
-    color: white;
-    /* Texto blanco */
-    background-color: var(--dark-gold-color);
-    /* Fondo rojo */
-    border: none;
-    /* Sin bordes */
-    padding: 5px 10px;
-    /* Relleno alrededor del texto */
     cursor: pointer;
-    /* Cursor en forma de mano al pasar el ratón */
-    border-radius: 5px;
-    /* Bordes redondeados */
-    font-weight: bold;
-    /* Negrita */
 }
 
-.btn-eliminar:hover {
-    background-color: #C82333;
-    /* Color más oscuro al pasar el ratón */
+.modal-body {
+    padding: 15px 0;
+    color: var(--text-color);
 }
 
-        /* Estilos para los modales */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
+.modal-footer {
+    padding: 15px 0 0;
+    border-top: 1px solid var(--khaki);
+    margin-top: 20px;
+    text-align: right;
+}
 
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            border-radius: 10px;
-        }
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .modal-content {
+        width: 85%;
+        margin: 20% auto;
+    }
+}
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
+@media screen and (max-width: 480px) {
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+}
     </style>
 </head>
 
@@ -216,12 +164,14 @@ img {
     </div>
 {% with messages = get_flashed_messages() %}
 {% if messages %}
-{% for message in messages %}
-<div class="alert">
-    <span class="btn-close" onclick="this.parentElement.style.display='none';">&times;</span>
-    {{ message }}
+<div class="flash-messages">
+    {% for message in messages %}
+    <div class="flash-message alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close-btn" aria-label="Close">&times;</button>
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}
 {% endif %}
 {% endwith %}
     <h1>Eventos</h1>
@@ -268,12 +218,13 @@ img {
     <center> <button onclick="openModal('addUserModal')">Agregar Evento</button>
     </center>
     <!-- Lista de usuarios -->
-<a href="{{ url_for('ver_pdf_eventos') }}" target="_blank">Descargar Reporte PDF</a>
+<center><a href="{{ url_for('ver_pdf_eventos') }}" target="_blank">Descargar Reporte PDF</a></center>
 
 <div id="userTableContainer">
     <table id="userTable">    
       <thead>
         <tr>
+            <th>ID</th>
             <th>Nombre</th>
             <th>Fecha</th>
             <th>Hora</th>
@@ -285,15 +236,16 @@ img {
     <tbody>
         {% for dato in eventos %}
         <tr>
+            <td>{{ dato.id }}</td>
             <td>{{ dato.name }}</td>
             <td>{{ dato.event_date }}</td>
             <td>{{ dato.event_hour }}</td>
             <td>{{ dato.place }}</td>
             <td>{{ dato.price }}</td>
             <td>
-                <button onclick="openModal('editUserModal{{ dato.id }}')">Editar</button>
+                <i class='bx bx-edit nav__icon' onclick="openModal('editUserModal{{ dato.id }}')"></i>
                 <form action="/delete/{{ dato.id }}" method="post" class="form-eliminar" style="display: inline;">
-                    <button type="submit" class="btn-eliminar">Eliminar</button>
+                    <button type="submit" class="btn-eliminar"><i class='bx bx-trash nav__icon'></i></button>
                 </form>
             </td>
         </tr>
@@ -365,6 +317,38 @@ img {
         crossorigin="anonymous"></script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+                // Cerrar mensajes al hacer clic en el botón de cerrar
+                document.querySelectorAll('.close-btn').forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        const message = this.closest('.flash-message');
+                        message.style.animation = 'fadeOut 0.5s forwards';
+                        setTimeout(() => message.remove(), 500);
+                    });
+                });
+
+                // Eliminar mensajes automáticamente después de 5 segundos
+                document.querySelectorAll('.flash-message').forEach(message => {
+                    setTimeout(() => {
+                        message.style.animation = 'fadeOut 0.5s forwards';
+                        setTimeout(() => message.remove(), 500);
+                    }, 5000);
+                });
+
+                // Esto es un ejemplo, necesitarías adaptarlo a cómo Flask envía los mensajes
+                document.querySelectorAll('.flash-message').forEach(message => {
+                    const text = message.textContent.trim().toLowerCase();
+                    if (text.includes('error') || text.includes('fail')) {
+                        message.classList.add('error');
+                    } else if (text.includes('success') || text.includes('éxito')) {
+                        message.classList.add('success');
+                    } else if (text.includes('warning') || text.includes('advertencia')) {
+                        message.classList.add('warning');
+                    } else {
+                        message.classList.add('info');
+                    }
+                });
+            });
         // Función para abrir un modal
         function openModal(modalId) {
             var modal = document.getElementById(modalId);

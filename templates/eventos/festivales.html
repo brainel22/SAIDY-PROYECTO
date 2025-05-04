@@ -1,15 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <link rel="icon" href="{{ url_for('static', filename='img/Boolings Reserves.png') }}" type="image/png">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventos Disponibles</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/evento.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/menu2.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -21,7 +22,7 @@
             <a href="#" class="header__logo">Boolings Reserves</a>
             <form action="#" method="get">
                 <div class="header__search">
-                    <input type="search" name="search" placeholder="Search" class="header__input">
+                    <input type="search" name="query" placeholder="Search" class="header__input">
                     <i class='bx bx-search header__icon'></i>
                 </div>
             </form>
@@ -65,7 +66,7 @@
                         <div class="nav__items">
                             <h3 class="nav__subtitle">Eventos</h3>
                             <div class="nav__dropdown">
-                                <a href="#" class="nav__link">
+                                <a href="{{url_for('eventos_disponibles')}}" class="nav__link">
                                     <i class='bx bx-calendar nav__icon'></i>
                                     <span class="nav__name">Eventos Disponibles</span>
                                     <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
@@ -73,24 +74,23 @@
 
                                 <div class="nav__dropdown-collapse">
                                     <div class="nav__dropdown-content">
-                                        <a href="{{url_for('concierto')}}" class="nav__dropdown-item">Concierto</a>
-                                        <a href="{{url_for('arte_cultura')}}" class="nav__dropdown-item">Arte y Cultura</a>
+                                        <a href="{{url_for('concierto')}}" class="nav__dropdown-item">Musica y
+                                            Concierto</a>
+                                        <a href="{{url_for('arte_cultura')}}" class="nav__dropdown-item">Arte y
+                                            Cultura</a>
                                         <a href="{{url_for('festivales')}}" class="nav__dropdown-item">Festivales</a>
-                                        <a href="{{url_for('talleres')}}" class="nav__dropdown-item">Cursos y talleres</a>
+                                        <a href="{{url_for('talleres')}}" class="nav__dropdown-item">Cursos y
+                                            talleres</a>
                                         <a href="{{url_for('conferencia')}}" class="nav__dropdown-item">Conferencias</a>
+
                                     </div>
                                 </div>
 
                             </div>
-
-                            <a href="#" class="nav__link">
-                                <i class='bx bx-compass nav__icon'></i>
-                                <span class="nav__name">Explore</span>
+                            <a href="{{url_for('historial')}}" class="nav__link">
+                                <i class='bx bx-history nav__icon'></i>
+                                <span class="nav__name">Historial</span>
                             </a>
-                        <a href="{{url_for('safe')}}" class="nav__link">
-                            <i class='bx bx-bookmark nav__icon'></i>
-                            <span class="nav__name">Saved</span>
-                        </a>
                         </div>
                     </div>
                 </div>
@@ -101,39 +101,47 @@
                 </a>
         </nav>
     </div>
-{% if error %}
-<div>{{ error }}</div>
-{% endif %}
     {% with messages = get_flashed_messages() %}
     {% if messages %}
-    {% for message in messages %}
-    <div class="alert">
-        <span class="btn-close" onclick="this.parentElement.style.display='none';">&times;</span>
-        {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-    <h1>Festivales</h1>
     <div class="container">
-        {% for dato in datos %}
-        <div class="card">
-            <img src="{{dato.image_url}}" alt="" class="card-img">
-            <div class="card-content">
-                <h2 class="card-title">{{ dato.name }}</h2>
-                <p class="card-description">Categoria: {{ dato.category }}</p>
-                <p class="card-description">Descripcion: {{ dato.description }}</p>
-                <p class="card-description">Lugar: {{ dato.place }}</p>
-                <p class="card-price">Precio: {{ dato.price }}</p>
-            <a href="{{ url_for('guardar_evento', id=dato.id) }}" class="card-link"><i class='bx bx-bookmark nav__icon'></i></a><br>
-
-                <a href="{{ url_for('reservar_evento', id=dato.id) }}" class="card-link">Reservar</a>
-            </div>
+        {% for message in messages %}
+        <div class="alert alert-dismissible fade show" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {{ message }}
         </div>
         {% endfor %}
     </div>
-    <script src="{{url_for('static',filename='js/evento,js')}}"></script>
+    {% endif %}
+    {% endwith %}
+    <h1>Festivales</h1>
+
+    <!-- Agregar campo de búsqueda -->
+    <div id="userTableContainer">
+        <div class="container" id="userTable">
+            {% for dato in datos %}
+            <div class="card">
+                <img src="{{ dato.image_url }}" alt="" class="card-img">
+                <div class="card-content">
+                    <h2 class="card-title">{{ dato.name }}</h2>
+                    <p class="card-description">Categoria: {{ dato.category }}</p>
+                    <p class="card-description">Descripcion: {{ dato.description }}</p>
+                    <p class="card-description">Lugar: {{ dato.place }}</p>
+                    <p class="card-description">Fecha: {{ dato.event_date }} a las {{ dato.event_hour}}</p>
+
+                    <p class="card-price">Precio: {{ dato.price }}</p>
+                    <a href="#" class="card-link favorite-btn" data-event-id="{{ dato.id }}">
+                        <i class='bx bx-heart nav__icon'></i> Favorito
+                    </a>
+                    <!-- Agregar enlace para guardar evento -->
+                    <a href="{{ url_for('reservar_evento', id=dato.id) }}" class="card-link">Reservar</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="{{url_for('static', filename = 'js/events.js')}}"></script>
 </body>
 
 </html>

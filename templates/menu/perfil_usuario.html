@@ -4,738 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Perfil Premium | Boolings</title>
+    <title>Mi Perfil</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/menu2.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+<link rel="icon" href="{{ url_for('static', filename='img/Boolings Reserves.png') }}" type="image/png">
+
     <!-- Box Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-    <style>
-        :root {
-            --primary: #7367F0;
-            --primary-dark: #5A50D6;
-            --secondary: #FF9F43;
-            --success: #28C76F;
-            --danger: #EA5455;
-            --warning: #FF9F43;
-            --info: #00CFE8;
-            --dark: #283046;
-            --light: #F8F8F8;
-            --gray: #B8C2CC;
-            --gray-dark: #6E6B7B;
-            --shadow: 0 4px 24px 0 rgba(34, 41, 47, 0.1);
-            --transition: all 0.3s ease;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #F5F7FA;
-            color: var(--dark);
-            overflow-x: hidden;
-        }
-
-        /* Header Override */
-        .header {
-            box-shadow: 0 2px 8px 0 rgba(34, 41, 47, 0.14);
-            background: white;
-        }
-
-        /* Profile Hero Section */
-        .profile-hero {
-            background: linear-gradient(135deg, var(--primary) 0%, #9E95F5 100%);
-            padding: 80px 0 120px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: -60px;
-        }
-
-        .profile-hero::before {
-            content: '';
-            position: absolute;
-            bottom: -50px;
-            right: -50px;
-            width: 300px;
-            height: 300px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-        }
-
-        .profile-hero::after {
-            content: '';
-            position: absolute;
-            top: -100px;
-            left: -50px;
-            width: 400px;
-            height: 400px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 50%;
-        }
-
-        .hero-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            position: relative;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-        }
-
-        .profile-avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 5px solid rgba(255, 255, 255, 0.2);
-            object-fit: cover;
-            margin-right: 30px;
-            box-shadow: var(--shadow);
-        }
-
-        .profile-info h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-info p {
-            opacity: 0.9;
-            margin-bottom: 15px;
-        }
-
-        .profile-badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        /* Main Content */
-        .profile-container {
-            max-width: 1200px;
-            margin: 0 auto 50px;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 25px;
-            position: relative;
-        }
-
-        /* Sidebar */
-        .profile-sidebar {
-            position: sticky;
-            top: 100px;
-            height: fit-content;
-        }
-
-        .sidebar-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            padding: 25px;
-            margin-bottom: 25px;
-        }
-
-        .sidebar-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-        }
-
-        .sidebar-title i {
-            margin-right: 10px;
-            color: var(--primary);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 15px 10px;
-            border-radius: 8px;
-            background: var(--light);
-            transition: var(--transition);
-        }
-
-        .stat-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--gray-dark);
-            margin-top: 5px;
-        }
-
-        .progress-container {
-            margin-top: 20px;
-        }
-
-        .progress-title {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            margin-bottom: 5px;
-            color: var(--gray-dark);
-        }
-
-        .progress-bar {
-            height: 8px;
-            background: #EBEBEB;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            border-radius: 4px;
-            width: 65%;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .social-link {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 5px;
-            color: var(--gray-dark);
-            transition: var(--transition);
-        }
-
-        .social-link:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-3px);
-        }
-
-        /* Main Content */
-        .profile-main {
-            display: grid;
-            gap: 25px;
-        }
-
-        .profile-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            padding: 25px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--dark);
-            position: relative;
-            padding-left: 15px;
-        }
-
-        .section-title::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 5px;
-            height: 70%;
-            width: 4px;
-            background: var(--primary);
-            border-radius: 4px;
-        }
-
-        .view-all {
-            font-size: 0.8rem;
-            color: var(--primary);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-        }
-
-        .view-all i {
-            margin-left: 5px;
-        }
-
-        /* Reservations */
-        .reservation-card {
-            display: flex;
-            padding: 20px;
-            border-radius: 10px;
-            background: var(--light);
-            margin-bottom: 15px;
-            transition: var(--transition);
-            border: 1px solid rgba(0, 0, 0, 0.03);
-        }
-
-        .reservation-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .reservation-img {
-            width: 100px;
-            height: 100px;
-            border-radius: 8px;
-            object-fit: cover;
-            margin-right: 20px;
-            align-self: center;
-        }
-
-        .reservation-content {
-            flex: 1;
-        }
-
-        .reservation-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: var(--dark);
-        }
-
-        .reservation-meta {
-            display: flex;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            margin-right: 15px;
-            margin-bottom: 5px;
-            font-size: 0.8rem;
-            color: var(--gray-dark);
-        }
-
-        .meta-item i {
-            margin-right: 5px;
-            font-size: 0.9rem;
-        }
-
-        .reservation-status {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .status-confirmed {
-            background: rgba(40, 199, 111, 0.1);
-            color: var(--success);
-        }
-
-        .status-pending {
-            background: rgba(255, 159, 67, 0.1);
-            color: var(--warning);
-        }
-
-        .status-cancelled {
-            background: rgba(234, 84, 85, 0.1);
-            color: var(--danger);
-        }
-
-        .reservation-actions {
-            display: flex;
-            align-items: center;
-        }
-
-        .action-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 10px;
-            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
-            color: var(--gray-dark);
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-        }
-
-        .action-btn:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Favorites */
-        .favorites-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 15px;
-        }
-
-        .favorite-item {
-            background: var(--light);
-            border-radius: 10px;
-            overflow: hidden;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .favorite-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .favorite-img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-        }
-
-        .favorite-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 15px;
-            color: white;
-        }
-
-        .favorite-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .favorite-category {
-            font-size: 0.7rem;
-            opacity: 0.8;
-        }
-
-        .favorite-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 30px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .favorite-btn:hover {
-            background: var(--danger);
-        }
-
-        /* Activity */
-        .activity-timeline {
-            position: relative;
-            padding-left: 30px;
-        }
-
-        .activity-timeline::before {
-            content: '';
-            position: absolute;
-            left: 11px;
-            top: 0;
-            height: 100%;
-            width: 2px;
-            background: var(--gray);
-        }
-
-        .activity-item {
-            position: relative;
-            padding-bottom: 20px;
-        }
-
-        .activity-item:last-child {
-            padding-bottom: 0;
-        }
-
-        .activity-dot {
-            position: absolute;
-            left: -30px;
-            top: 0;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: white;
-            border: 4px solid var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .activity-dot i {
-            font-size: 0.7rem;
-            color: var(--primary);
-        }
-
-        .activity-content {
-            background: var(--light);
-            padding: 15px;
-            border-radius: 8px;
-        }
-
-        .activity-time {
-            font-size: 0.7rem;
-            color: var(--gray-dark);
-            margin-bottom: 5px;
-        }
-
-        .activity-text {
-            font-size: 0.9rem;
-        }
-
-        /* Edit Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-container {
-            background: white;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            animation: modalFadeIn 0.4s ease;
-        }
-
-        @keyframes modalFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-header {
-            padding: 20px 25px;
-            background: var(--primary);
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .modal-close:hover {
-            transform: rotate(90deg);
-        }
-
-        .modal-body {
-            padding: 25px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--dark);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #DDD;
-            border-radius: 8px;
-            font-family: 'Montserrat', sans-serif;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(115, 103, 240, 0.2);
-            outline: none;
-        }
-
-        .form-avatar {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .avatar-upload {
-            position: relative;
-            display: inline-block;
-        }
-
-        .avatar-preview {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid #EEE;
-            cursor: pointer;
-        }
-
-        .avatar-edit {
-            position: absolute;
-            right: 10px;
-            bottom: 10px;
-            background: var(--primary);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .avatar-edit input {
-            display: none;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-            font-size: 0.9rem;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(115, 103, 240, 0.3);
-        }
-
-        .btn-block {
-            display: block;
-            width: 100%;
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .profile-container {
-                grid-template-columns: 1fr;
-            }
-
-            .profile-sidebar {
-                position: static;
-                order: 2;
-            }
-
-            .hero-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .profile-avatar {
-                margin-right: 0;
-                margin-bottom: 20px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .profile-hero {
-                padding: 60px 0 100px;
-            }
-
-            .reservation-card {
-                flex-direction: column;
-            }
-
-            .reservation-img {
-                width: 100%;
-                height: auto;
-                max-height: 200px;
-                margin-right: 0;
-                margin-bottom: 15px;
-            }
-
-            .reservation-actions {
-                margin-top: 15px;
-                justify-content: flex-end;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -743,6 +21,7 @@
     <header class="header">
         <div class="header__container">
             <img src="{{url_for('static',filename='img/Boolings Reserves.png')}}" alt="" class="header__img">
+    
             <a href="#" class="header__logo">Boolings Reserves</a>
             <form action="#" method="get">
                 <div class="header__search">
@@ -755,7 +34,6 @@
             </div>
         </div>
     </header>
-
     <!--========== NAV ==========-->
     <div class="nav" id="navbar">
         <nav class="nav__container">
@@ -764,7 +42,7 @@
                     <i class='bx bxs-disc nav__icon'></i>
                     <span class="nav__logo-name">Boolings Reserves</span>
                 </a>
-
+    
                 <div class="nav__list">
                     <div class="nav__items">
                         <h3 class="nav__subtitle">Profile</h3>
@@ -776,60 +54,57 @@
                             <i class='bx bx-layer nav__icon'></i>
                             <span class="nav__name">About Us</span>
                         </a>
-
+    
                         <a href="{{url_for('perfil')}}" class="nav__link">
                             <i class='bx bx-user nav__icon'></i>
                             <span class="nav__name">Perfil</span>
                         </a>
-
+    
                         <a href="{{url_for('contact')}}" class="nav__link">
                             <i class='bx bx-comment nav__icon'></i>
                             <span class="nav__name">Contactos</span>
                         </a>
-                    </div>
-
-                    <div class="nav__items">
-                        <h3 class="nav__subtitle">Eventos</h3>
-                        <div class="nav__dropdown">
-                            <a href="{{url_for('eventos_disponibles')}}" class="nav__link">
-                                <i class='bx bx-calendar nav__icon'></i>
-                                <span class="nav__name">Eventos Disponibles</span>
-                                <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
-                            </a>
-
-                            <div class="nav__dropdown-collapse">
-                                <div class="nav__dropdown-content">
-                                    <a href="{{url_for('concierto')}}" class="nav__dropdown-item">Musica y Concierto</a>
-                                    <a href="{{url_for('arte_cultura')}}" class="nav__dropdown-item">Arte y Cultura</a>
-                                    <a href="{{url_for('festivales')}}" class="nav__dropdown-item">Festivales</a>
-                                    <a href="{{url_for('talleres')}}" class="nav__dropdown-item">Cursos y talleres</a>
-                                    <a href="{{url_for('conferencia')}}" class="nav__dropdown-item">Conferencias</a>
+    
+                        </a>
+                        <div class="nav__items">
+                            <h3 class="nav__subtitle">Eventos</h3>
+                            <div class="nav__dropdown">
+                                <a href="{{url_for('eventos_disponibles')}}" class="nav__link">
+                                    <i class='bx bx-calendar nav__icon'></i>
+                                    <span class="nav__name">Eventos Disponibles</span>
+                                    <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                                </a>
+    
+                                <div class="nav__dropdown-collapse">
+                                    <div class="nav__dropdown-content">
+                                        <a href="{{url_for('concierto')}}" class="nav__dropdown-item">Musica y Concierto</a>
+                                        <a href="{{url_for('arte_cultura')}}" class="nav__dropdown-item">Arte y Cultura</a>
+                                        <a href="{{url_for('festivales')}}" class="nav__dropdown-item">Festivales</a>
+                                        <a href="{{url_for('talleres')}}" class="nav__dropdown-item">Cursos y talleres</a>
+                                        <a href="{{url_for('conferencia')}}" class="nav__dropdown-item">Conferencias</a>
+    
+                                    </div>
                                 </div>
+    
                             </div>
+                            <a href="{{url_for('historial')}}" class="nav__link">
+                                <i class='bx bx-history nav__icon'></i>
+                                <span class="nav__name">Historial</span>
+                            </a>
                         </div>
-                        <a href="#" class="nav__link">
-                            <i class='bx bx-compass nav__icon'></i>
-                            <span class="nav__name">Explore</span>
-                        </a>
-                        <a href="{{url_for('safe')}}" class="nav__link">
-                            <i class='bx bx-bookmark nav__icon'></i>
-                            <span class="nav__name">Saved</span>
-                        </a>
                     </div>
                 </div>
-
+    
                 <a href="{{url_for('logout')}}" class="nav__link nav__logout">
                     <i class='bx bx-log-out nav__icon'></i>
                     <span class="nav__name">Log Out</span>
                 </a>
-            </div>
         </nav>
     </div>
-
     <!-- Profile Hero Section -->
     <section class="profile-hero" data-aos="fade">
         <div class="hero-content">
-            <img src="{{ url_for('static', filename='img/profile-placeholder.jpg') }}" alt="Profile"
+            <img src="{{ url_for('static', filename='img/Boolings Reserves.png') }}" alt="Profile"
                 class="profile-avatar">
             <div class="profile-info">
                 <h1>{{ user['username'] }}</h1>
@@ -843,27 +118,24 @@
     <div class="profile-container">
         <!-- Sidebar -->
         <aside class="profile-sidebar">
-            <div class="sidebar-card" data-aos="fade-up" data-aos-delay="100">
-                <h3 class="sidebar-title"><i class='bx bx-stats'></i> Estadísticas</h3>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-number">{{ reservations|length if reservations else 0 }}</div>
-                        <div class="stat-label">Reservas</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">8</div>
-                        <div class="stat-label">Favoritos</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">12</div>
-                        <div class="stat-label">Eventos</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">4</div>
-                        <div class="stat-label">Amigos</div>
-                    </div>
+        <div class="sidebar-card" data-aos="fade-up" data-aos-delay="100">
+            <h3 class="sidebar-title"><i class='bx bx-stats'></i> Estadísticas</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">{{ reservations|length if reservations else 0 }}</div>
+                    <div class="stat-label">Reservas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{ favorites|length if favorites else 0 }}</div>
+                    <div class="stat-label">Favoritos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{ (reservations|length if reservations else 0) + (favorites|length if favorites
+                        else 0) }}</div>
+                    <div class="stat-label">Eventos</div>
                 </div>
             </div>
+        </div>
 
             <div class="sidebar-card" data-aos="fade-up" data-aos-delay="150">
                 <h3 class="sidebar-title"><i class='bx bx-award'></i> Logros</h3>
@@ -900,97 +172,57 @@
 
         <!-- Main Content -->
         <main class="profile-main">
-            <!-- Reservations Section -->
-            <section class="profile-card" data-aos="fade-up">
-                <div class="section-header">
-                    <h2 class="section-title">Mis Reservas</h2>
-                    <a href="#" class="view-all">Ver todas <i class='bx bx-chevron-right'></i></a>
+<!-- Reservations Section -->
+<section class="profile-card" data-aos="fade-up">
+    <div class="section-header">
+        <h2 class="section-title">Mis Reservas</h2>
+        <a href="#" class="view-all">Ver todas <i class='bx bx-chevron-right'></i></a>
+    </div>
+
+    <div class="reservations-list">
+        {% if reservations %}
+        {% for reservation in reservations %}
+        <div class="reservation-card">
+            <img src="{{ reservation.event_image if reservation.event_image else url_for('static', filename='img/event-placeholder.jpg') }}"
+                alt="{{ reservation.event_name }}" class="reservation-img">
+            <div class="reservation-content">
+                <h3>{{ reservation.event_name }}</h3>
+                <div class="reservation-meta">
+                    <span class="meta-item"><i class='bx bx-calendar'></i> {{ reservation.date}}</span>
+                    <span class="meta-item"><i class='bx bx-time'></i> {{ reservation.time }}</span>
+                    <span class="meta-item"><i class='bx bx-user'></i> {{ reservation.number_of_reserved_tickets }}
+                        tickets</span>
+                    <span class="meta-item"><i class='bx bx-category'></i> {{ reservation.category_name }}</span>
+                    <span class="meta-item"><i class='bx bx-calendar-check'></i>
+                        {% if reservation.reservation_date %}
+                        Reservado el: {{ reservation.reservation_date}}
+                        {% else %}
+                        Fecha no especificada
+                        {% endif %}
+                    </span>
                 </div>
-
-                <div class="reservations-list">
-                    {% if reservations %}
-                    {% for reservation in reservations %}
-                    <div class="reservation-card">
-                        <img src="{{ url_for('static', filename='img/event-placeholder.jpg') }}" alt="Evento"
-                            class="reservation-img">
-                        <div class="reservation-content">
-                            <h3 class="reservation-title">{{ reservation[0] }}</h3>
-                            <div class="reservation-meta">
-                                <span class="meta-item"><i class='bx bx-calendar'></i> {{ reservation[2] }}</span>
-                                <span class="meta-item"><i class='bx bx-time'></i> 20:00 - 23:00</span>
-                                <span class="meta-item"><i class='bx bx-user'></i> {{ reservation[1] }} tickets</span>
-                            </div>
-                            <span class="reservation-status status-confirmed">Confirmado</span>
-                        </div>
-                        <div class="reservation-actions">
-                            <button class="action-btn" title="Descargar ticket"><i class='bx bx-download'></i></button>
-                            <button class="action-btn" title="Cancelar reserva"><i class='bx bx-trash'></i></button>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    {% else %}
-                    <div style="text-align: center; padding: 40px 20px;">
-                        <i class='bx bx-calendar-event' style="font-size: 3rem; color: #DDD; margin-bottom: 15px;"></i>
-                        <h3 style="font-size: 1.2rem; margin-bottom: 10px;">No tienes reservas</h3>
-                        <p style="color: var(--gray-dark); font-size: 0.9rem;">Explora nuestros eventos y haz tu primera
-                            reserva</p>
-                        <a href="{{url_for('eventos_disponibles')}}" class="btn btn-primary" style="margin-top: 20px;">
-                            <i class='bx bx-search-alt'></i> Buscar Eventos
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
-            </section>
-
-            <!-- Favorites Section -->
-            <section class="profile-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="section-header">
-                    <h2 class="section-title">Mis Favoritos</h2>
-                    <a href="#" class="view-all">Ver todos <i class='bx bx-chevron-right'></i></a>
-                </div>
-
-                <div class="favorites-grid">
-                    <!-- Item 1 -->
-                    <div class="favorite-item">
-                        <img src="{{ url_for('static', filename='img/event1.jpg') }}" alt="Evento" class="favorite-img">
-                        <div class="favorite-overlay">
-                            <h4 class="favorite-title">Festival de Música Electrónica</h4>
-                            <span class="favorite-category">Música</span>
-                        </div>
-                        <button class="favorite-btn"><i class='bx bx-heart'></i></button>
-                    </div>
-
-                    <!-- Item 2 -->
-                    <div class="favorite-item">
-                        <img src="{{ url_for('static', filename='img/event2.jpg') }}" alt="Evento" class="favorite-img">
-                        <div class="favorite-overlay">
-                            <h4 class="favorite-title">Exposición de Arte Moderno</h4>
-                            <span class="favorite-category">Arte</span>
-                        </div>
-                        <button class="favorite-btn"><i class='bx bx-heart'></i></button>
-                    </div>
-
-                    <!-- Item 3 -->
-                    <div class="favorite-item">
-                        <img src="{{ url_for('static', filename='img/event3.jpg') }}" alt="Evento" class="favorite-img">
-                        <div class="favorite-overlay">
-                            <h4 class="favorite-title">Taller de Fotografía</h4>
-                            <span class="favorite-category">Taller</span>
-                        </div>
-                        <button class="favorite-btn"><i class='bx bx-heart'></i></button>
-                    </div>
-
-                    <!-- Item 4 -->
-                    <div class="favorite-item">
-                        <img src="{{ url_for('static', filename='img/event4.jpg') }}" alt="Evento" class="favorite-img">
-                        <div class="favorite-overlay">
-                            <h4 class="favorite-title">Conferencia de Tecnología</h4>
-                            <span class="favorite-category">Conferencia</span>
-                        </div>
-                        <button class="favorite-btn"><i class='bx bx-heart'></i></button>
-                    </div>
-                </div>
-            </section>
+                <span class="reservation-status status-confirmed">CONFIRMADO</span>
+            </div>
+            <div class="reservation-actions">
+                <button class="action-btn cancel-reservation" title="Cancelar reserva"
+                    data-reservation-id="{{ reservation.event_id }}">
+                    <i class='bx bx-trash'></i>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div style="text-align: center; padding: 40px 20px;">
+            <i class='bx bx-calendar-event' style="font-size: 3rem; color: #DDD; margin-bottom: 15px;"></i>
+            <h3 style="font-size: 1.2rem; margin-bottom: 10px;">No tienes reservas</h3>
+            <p style="color: var(--gray-dark); font-size: 0.9rem;">Explora nuestros eventos y haz tu primera reserva</p>
+            <a href="{{url_for('eventos_disponibles')}}" class="btn btn-primary" style="margin-top: 20px;">
+                <i class='bx bx-search-alt'></i> Buscar Eventos
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
 
             <!-- Activity Section -->
             <section class="profile-card" data-aos="fade-up" data-aos-delay="150">

@@ -1,9 +1,5 @@
-window.onload = function () {
-    alert("¡Bienvenido a nuestra página!");
-};
 
 // Mostrar alerta personalizada
-
 document.getElementById('searchbox').addEventListener('keyup', function () {
     const query = this.value;
 

@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Restablecer Contraseña</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/Boolings Reserves.png') }}" type="image/png">
+
     <style>
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 
@@ -121,16 +123,18 @@
 
 
     <form method="POST">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        {% for message in messages %}
-        <div class="alert">
-            <span class="btn-close" onclick="this.parentElement.style.display='none';">&times;</span>
-            {{ message }}
-        </div>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-messages">
+    {% for message in messages %}
+    <div class="flash-message alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close-btn" aria-label="Close">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
         <h1>Restablecer tu contraseña</h1>
         <h3>Email:</h3>
         <input type="email" name="email" required>
@@ -138,5 +142,6 @@
         <a href="{{url_for('access_login')}}">Cancelar</a>
     </form>
 </body>
+<script src="{{url_for('static',filename = 'js/login.js')}}"></script>
 
 </html>
