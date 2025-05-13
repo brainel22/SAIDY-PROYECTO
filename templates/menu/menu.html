@@ -16,22 +16,24 @@
 </head>
 <body>
     <!--========== HEADER ==========-->
-    <header class="header">
-        <div class="header__container">
-            <img src="{{url_for('static',filename='img/Boolings Reserves.png')}}" alt="" class="header__img">
+<!--========== HEADER ==========-->
+<header class="header">
+    <div class="header__container">
+        <img src="{{url_for('static',filename='img/Boolings Reserves.png')}}" alt="" class="header__img">
 
-            <a href="#" class="header__logo">Boolings Reserves</a>
+        <a href="#" class="header__logo">Boolings Reserves</a>
+
         <form action="#" method="get">
             <div class="header__search">
                 <input type="search" name="query" placeholder="Search" class="header__input">
                 <i class='bx bx-search header__icon'></i>
             </div>
         </form>
-            <div class="header__toggle">
-                <i class='bx bx-menu' id="header-toggle"></i>
-            </div>
+        <div class="header__toggle">
+            <i class='bx bx-menu' id="header-toggle"></i>
         </div>
-    </header>
+    </div>
+</header>
     <!--========== NAV ==========-->
     <div class="nav" id="navbar">
         <nav class="nav__container">
@@ -108,6 +110,8 @@
 
 
 <script src="{{url_for('static',filename='js/menu2.js')}}" defer></script>
+<script src="{{url_for('static',filename='js/notification.js')}}" defer></script>
+
 </body>
 
 </html>

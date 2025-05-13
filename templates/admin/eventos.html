@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename = 'css/menu_admin.css')}}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+<link rel="icon" href="{{ url_for('static', filename='img/Boolings Reserves.png') }}" type="image/png">
 
     <!-- Agrega tus estilos CSS aquí -->
     <style>
@@ -98,7 +99,7 @@
             <img src="{{url_for('static',filename='img/Boolings Reserves.png')}}" alt="" class="header__img">
 
             <a href="#" class="header__logo">Boolings Reserves</a>
-            <form action="#" method="get">
+            <form action="" method="get">
                 <div class="header__search">
 <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Buscar por nombre...">
                     <i class='bx bx-search header__icon'></i>
@@ -143,7 +144,8 @@
                             </div>
 
                         </div>
-                        <div class="nav__list">
+            
+                                                <div class="nav__list">
                             <div class="nav__items">
                                 <h3 class="nav__subtitle">Reportes</h3>
                                 <a href="{{url_for('facturas')}}" class="nav__link">
@@ -152,6 +154,8 @@
                                 </a>
                             </div>
                         </div>
+                    
+
                     </div>
                 </div>
             </div>
@@ -215,16 +219,21 @@
     </form>
         </div>
     </div>
+    
     <center> <button onclick="openModal('addUserModal')">Agregar Evento</button>
+    </center><br>
+    <center>
+        <a href="{{ url_for('ver_pdf_eventos') }}" target="_blank" download>
+    <i class='bx bxs-download'></i> Descargar PDF
+</a>
     </center>
-    <!-- Lista de usuarios -->
-<center><a href="{{ url_for('ver_pdf_eventos') }}" target="_blank">Descargar Reporte PDF</a></center>
+
+
 
 <div id="userTableContainer">
-    <table id="userTable">    
+    <table id="eventTable">    
       <thead>
         <tr>
-            <th>ID</th>
             <th>Nombre</th>
             <th>Fecha</th>
             <th>Hora</th>
@@ -236,7 +245,6 @@
     <tbody>
         {% for dato in eventos %}
         <tr>
-            <td>{{ dato.id }}</td>
             <td>{{ dato.name }}</td>
             <td>{{ dato.event_date }}</td>
             <td>{{ dato.event_hour }}</td>
@@ -366,7 +374,7 @@
                 var input, filter, table, tr, td, i, txtValue;
                 input = document.getElementById("searchInput");
                 filter = input.value.toUpperCase();
-                table = document.getElementById("userTable");
+                table = document.getElementById("eventTable");
                 tr = table.getElementsByTagName("tr");
                 for (i = 0; i < tr.length; i++) {
                     td = tr[i].getElementsByTagName("td")[1]; // Cambia el índice si quieres buscar en otra columna

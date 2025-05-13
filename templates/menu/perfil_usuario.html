@@ -4,25 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Perfil</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu2.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+    <title>Perfil de Usuario | Boolings</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href=" {{url_for('static',filename = 'css/menu2.css')}}">
+    <link rel="stylesheet" href=" {{url_for('static',filename = 'css/perfil.css')}}">
 <link rel="icon" href="{{ url_for('static', filename='img/Boolings Reserves.png') }}" type="image/png">
 
-    <!-- Box Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <!-- Boxicons CSS -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
 </head>
 
 <body>
-    <!--========== HEADER ==========-->
     <header class="header">
         <div class="header__container">
             <img src="{{url_for('static',filename='img/Boolings Reserves.png')}}" alt="" class="header__img">
     
             <a href="#" class="header__logo">Boolings Reserves</a>
+    
             <form action="#" method="get">
                 <div class="header__search">
                     <input type="search" name="query" placeholder="Search" class="header__input">
@@ -101,6 +103,19 @@
                 </a>
         </nav>
     </div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for message in messages %}
+        <div class="flash-message alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close-btn" aria-label="Close">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
     <!-- Profile Hero Section -->
     <section class="profile-hero" data-aos="fade">
         <div class="hero-content">
@@ -114,172 +129,199 @@
         </div>
     </section>
 
-    <!-- Main Profile Content -->
-    <div class="profile-container">
-        <!-- Sidebar -->
-        <aside class="profile-sidebar">
-        <div class="sidebar-card" data-aos="fade-up" data-aos-delay="100">
-            <h3 class="sidebar-title"><i class='bx bx-stats'></i> Estadísticas</h3>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">{{ reservations|length if reservations else 0 }}</div>
-                    <div class="stat-label">Reservas</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">{{ favorites|length if favorites else 0 }}</div>
-                    <div class="stat-label">Favoritos</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">{{ (reservations|length if reservations else 0) + (favorites|length if favorites
-                        else 0) }}</div>
-                    <div class="stat-label">Eventos</div>
-                </div>
-            </div>
-        </div>
-
-            <div class="sidebar-card" data-aos="fade-up" data-aos-delay="150">
-                <h3 class="sidebar-title"><i class='bx bx-award'></i> Logros</h3>
-                <div class="progress-container">
-                    <div class="progress-title">
-                        <span>Nivel de Perfil</span>
-                        <span>65%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill"></div>
+    <div class="container">
+        <div class="profile-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <!-- Sección de Estadísticas -->
+                <div class="sidebar-card" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="sidebar-title"><i class='bx bx-stats'></i> Estadísticas</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">{{ stats.total_reservations if stats else 0 }}</div>
+                            <div class="stat-label">Reservas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ stats.total_favorites if stats else 0 }}</div>
+                            <div class="stat-label">Favoritos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ stats.total_events if stats else 0 }}</div>
+                            <div class="stat-label">Eventos</div>
+                        </div>
                     </div>
                 </div>
-                <div class="badges-container">
-                    <div style="text-align: center; margin-top: 15px;">
-                        <i class='bx bx-medal' style="font-size: 2rem; color: var(--warning);"></i>
-                        <p style="font-size: 0.8rem; margin-top: 5px;">Explorador Novato</p>
+
+                <!-- Sección de Logros -->
+                <div class="sidebar-card" data-aos="fade-up" data-aos-delay="150">
+                    <h3 class="sidebar-title"><i class='bx bx-award'></i> Logros</h3>
+                    <div class="progress-container">
+                        <div class="progress-title">
+                            <span>Nivel de Perfil</span>
+                            <span>65%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%;"></div>
+                        </div>
+                    </div>
+                    <div class="badges-container">
+                        <div style="text-align: center; margin-top: 15px;">
+                            <i class='bx bx-medal' style="font-size: 2rem; color: var(--warning);"></i>
+                            <p style="font-size: 0.8rem; margin-top: 5px;">Explorador Novato</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="sidebar-card" data-aos="fade-up" data-aos-delay="200">
-                <h3 class="sidebar-title"><i class='bx bx-share-alt'></i> Social</h3>
-                <div class="social-links">
-                    <a href="#" class="social-link"><i class='bx bxl-facebook'></i></a>
-                    <a href="#" class="social-link"><i class='bx bxl-twitter'></i></a>
-                    <a href="#" class="social-link"><i class='bx bxl-instagram'></i></a>
-                    <a href="#" class="social-link"><i class='bx bxl-linkedin'></i></a>
+                <!-- Sección Social -->
+                <div class="sidebar-card" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="sidebar-title"><i class='bx bx-share-alt'></i> Social</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link bx-facebook"><i class='bx bxl-facebook'></i></a>
+                        <a href="#" class="social-link bx-twitter"><i class='bx bxl-twitter'></i></a>
+                        <a href="#" class="social-link bx-instagram"><i class='bx bxl-instagram'></i></a>
+                        <a href="#" class="social-link bx-linkedin"><i class='bx bxl-linkedin'></i></a>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" id="editButton">
+                        <i class='bx bx-edit'></i> Editar Perfil
+                    </button>
                 </div>
-                <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" id="editButton">
-                    <i class='bx bx-edit'></i> Editar Perfil
-                </button>
-            </div>
-        </aside>
+            </aside>
 
-        <!-- Main Content -->
-        <main class="profile-main">
-<!-- Reservations Section -->
-<section class="profile-card" data-aos="fade-up">
-    <div class="section-header">
-        <h2 class="section-title">Mis Reservas</h2>
-        <a href="#" class="view-all">Ver todas <i class='bx bx-chevron-right'></i></a>
-    </div>
+            <!-- Main Content -->
+            <main class="profile-main">
+                <!-- Sección de Actividades Diarias -->
+                <section class="profile-card" data-aos="fade-up">
+                    <div class="section-header">
+                        <h2 class="section-title">Tu actividad hoy</h2>
+                        <span class="badge">{{ stats.today_reservations }} actividades</span>
+                    </div>
 
-    <div class="reservations-list">
-        {% if reservations %}
-        {% for reservation in reservations %}
-        <div class="reservation-card">
-            <img src="{{ reservation.event_image if reservation.event_image else url_for('static', filename='img/event-placeholder.jpg') }}"
-                alt="{{ reservation.event_name }}" class="reservation-img">
-            <div class="reservation-content">
-                <h3>{{ reservation.event_name }}</h3>
-                <div class="reservation-meta">
-                    <span class="meta-item"><i class='bx bx-calendar'></i> {{ reservation.date}}</span>
-                    <span class="meta-item"><i class='bx bx-time'></i> {{ reservation.time }}</span>
-                    <span class="meta-item"><i class='bx bx-user'></i> {{ reservation.number_of_reserved_tickets }}
-                        tickets</span>
-                    <span class="meta-item"><i class='bx bx-category'></i> {{ reservation.category_name }}</span>
-                    <span class="meta-item"><i class='bx bx-calendar-check'></i>
-                        {% if reservation.reservation_date %}
-                        Reservado el: {{ reservation.reservation_date}}
+                    {% if daily_activities %}
+                    <div class="activity-timeline">
+                        {% for activity in daily_activities %}
+                        <div class="activity-item">
+                            <div class="activity-dot {{ activity.type }}">
+                                <i class='bx {{ "bx bx-check" if activity.type == "reserva" else "bx bx-heart" }}'></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-time">{{ activity.activity_date.strftime('%H:%M') }}</div>
+                                <p class="activity-text">
+                                    {{ activity.activity_text }}
+                                    <a href="{{ url_for('reservar_evento', id=activity.event_id) }}" class="event-link">
+                                        {{ activity.event_name }}
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="no-activities">
+                        <i class='bx bx-info-circle'></i>
+                        <p>No hay actividad registrada hoy</p>
+                    </div>
+                    {% endif %}
+                </section>
+
+                <!-- Reservations Section -->
+                <section class="profile-card" data-aos="fade-up">
+                    <div class="section-header">
+                        <h2 class="section-title">Mis Reservas</h2>
+                        <a href="#" class="view-all">Ver todas <i class='bx bx-chevron-right'></i></a>
+                    </div>
+
+                    <div class="reservations-list">
+                        {% if reservations %}
+                        {% for reservation in reservations %}
+                        <div class="reservation-card">
+                            <img src="{{ reservation.event_image if reservation.event_image else url_for('static', filename='img/event-placeholder.jpg') }}"
+                                alt="{{ reservation.event_name }}" class="reservation-img">
+                            <div class="reservation-content">
+                                <h3>{{ reservation.event_name }}</h3>
+                                <div class="reservation-meta">
+                                    <span class="meta-item"><i class='bx bx-calendar'></i> {{
+                                        reservation.date.strftime('%d/%m/%Y') }}</span>
+                                    <span class="meta-item"><i class='bx bx-time'></i> {{ reservation.time }}</span>
+                                    <span class="meta-item"><i class='bx bx-user'></i> {{
+                                        reservation.number_of_reserved_tickets
+                                        }} tickets</span>
+                                    <span class="meta-item"><i class='bx bx-category'></i> {{ reservation.category_name
+                                        }}</span>
+                                    <span class="meta-item"><i class='bx bx-calendar-check'></i>
+                                        Reservado el: {{ reservation.reservation_date.strftime('%d/%m/%Y') }}
+                                    </span>
+                                </div>
+                                <span class="reservation-status status-confirmed">CONFIRMADO</span>
+                            </div>
+                            <div class="reservation-actions">
+                                <button class="action-btn cancel-reservation" title="Cancelar reserva"
+                                    data-reservation-id="{{ reservation.event_id }}">
+                                    <i class='bx bx-trash'></i>
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
                         {% else %}
-                        Fecha no especificada
+                        <div style="text-align: center; padding: 40px 20px;">
+                            <i class='bx bx-calendar-event'
+                                style="font-size: 3rem; color: var(--walnut-brown); margin-bottom: 15px;"></i>
+                            <h3 style="font-size: 1.2rem; margin-bottom: 10px;">No tienes reservas</h3>
+                            <p style="color: var(--walnut-brown); font-size: 0.9rem;">Explora nuestros eventos y haz tu
+                                primera
+                                reserva</p>
+                            <a href="{{url_for('eventos_disponibles')}}" class="btn btn-primary"
+                                style="margin-top: 20px;">
+                                <i class='bx bx-search-alt'></i> Buscar Eventos
+                            </a>
+                        </div>
                         {% endif %}
-                    </span>
-                </div>
-                <span class="reservation-status status-confirmed">CONFIRMADO</span>
-            </div>
-            <div class="reservation-actions">
-                <button class="action-btn cancel-reservation" title="Cancelar reserva"
-                    data-reservation-id="{{ reservation.event_id }}">
-                    <i class='bx bx-trash'></i>
-                </button>
-            </div>
+                    </div>
+                </section>
+
+                <!-- Sección de Recomendaciones -->
+                <section class="profile-card" data-aos="fade-up">
+                    <div class="section-header">
+                        <h2 class="section-title">Eventos recomendados</h2>
+                        <button id="refresh-recommendations" class="btn-refresh"><i class='bx bx-refresh'></i>
+                            Actualizar</button>
+                    </div>
+
+                    <div class="recommendations-container">
+                        {% if recommendations %}
+                        {% for event in recommendations %}
+                        <div class="event-card">
+                            <img src="{{ event.image_url if event.image_url else url_for('static', filename='img/event-placeholder.jpg') }}"
+                                alt="{{ event.name }}">
+                            <div class="event-info">
+                                <h3>{{ event.name }}</h3>
+                                <p class="event-category">{{ event.category }}</p>
+                                <p class="event-date"><i class='bx bx-calendar'></i> {{
+                                    event.event_date.strftime('%d/%m/%Y') }} a las {{ event.event_hour }}</p>
+                                <p class="event-place"><i class='bx bx-map'></i> {{ event.place }}</p>
+                                <div class="event-actions">
+                                    <a href="{{ url_for('reservar_evento', id=event.id) }}"
+                                        class="btn-reservar">Reservar</a>
+                                    <button class="btn-favorite" data-event-id="{{ event.id }}">
+                                        <i class='bx bx-heart'></i> Favorito
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="no-recommendations">
+                            <i class='bx bx-search-alt'
+                                style="font-size: 3rem; color: var(--walnut-brown); margin-bottom: 15px;"></i>
+                            <h3 style="font-size: 1.2rem; margin-bottom: 10px;">No hay recomendaciones</h3>
+                            <p style="color: var(--walnut-brown); font-size: 0.9rem;">Interactúa con más eventos para
+                                recibir
+                                recomendaciones personalizadas</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </section>
+            </main>
         </div>
-        {% endfor %}
-        {% else %}
-        <div style="text-align: center; padding: 40px 20px;">
-            <i class='bx bx-calendar-event' style="font-size: 3rem; color: #DDD; margin-bottom: 15px;"></i>
-            <h3 style="font-size: 1.2rem; margin-bottom: 10px;">No tienes reservas</h3>
-            <p style="color: var(--gray-dark); font-size: 0.9rem;">Explora nuestros eventos y haz tu primera reserva</p>
-            <a href="{{url_for('eventos_disponibles')}}" class="btn btn-primary" style="margin-top: 20px;">
-                <i class='bx bx-search-alt'></i> Buscar Eventos
-            </a>
-        </div>
-        {% endif %}
-    </div>
-</section>
-
-            <!-- Activity Section -->
-            <section class="profile-card" data-aos="fade-up" data-aos-delay="150">
-                <div class="section-header">
-                    <h2 class="section-title">Actividad Reciente</h2>
-                    <a href="#" class="view-all">Ver todo <i class='bx bx-chevron-right'></i></a>
-                </div>
-
-                <div class="activity-timeline">
-                    <!-- Activity Item 1 -->
-                    <div class="activity-item">
-                        <div class="activity-dot">
-                            <i class='bx bx-check'></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-time">Hoy, 10:30 AM</div>
-                            <p class="activity-text">Has reservado 2 entradas para <strong>Festival de Música
-                                    Electrónica</strong></p>
-                        </div>
-                    </div>
-
-                    <!-- Activity Item 2 -->
-                    <div class="activity-item">
-                        <div class="activity-dot">
-                            <i class='bx bx-heart'></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-time">Ayer, 4:15 PM</div>
-                            <p class="activity-text">Has añadido <strong>Taller de Fotografía</strong> a tus favoritos
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Activity Item 3 -->
-                    <div class="activity-item">
-                        <div class="activity-dot">
-                            <i class='bx bx-user-plus'></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-time">Ayer, 11:20 AM</div>
-                            <p class="activity-text">Has conectado con <strong>María González</strong></p>
-                        </div>
-                    </div>
-
-                    <!-- Activity Item 4 -->
-                    <div class="activity-item">
-                        <div class="activity-dot">
-                            <i class='bx bx-calendar-check'></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-time">Lunes, 9:00 AM</div>
-                            <p class="activity-text">Has asistido a <strong>Exposición de Arte Moderno</strong></p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
     </div>
 
     <!-- Edit Profile Modal -->
@@ -287,17 +329,18 @@
         <div class="modal-container">
             <div class="modal-header">
                 <h3 class="modal-title">Editar Perfil</h3>
-                <button class="modal-close" id="closeEditModal">&times;</button>
+                <button class="modal-close" id="closeEditModal" aria-label="Cerrar">&times;</button>
             </div>
             <div class="modal-body">
-                <form action="{{ url_for('update_profile') }}" method="POST" enctype="multipart/form-data">
+                <form id="profileForm" action="{{ url_for('update_profile') }}" method="POST"
+                    enctype="multipart/form-data">
                     <div class="form-avatar">
                         <div class="avatar-upload">
-                            <img src="{{ url_for('static', filename='img/profile-placeholder.jpg') }}" alt="Avatar"
-                                class="avatar-preview" id="avatarPreview">
+                            <img src="{{ user.get('avatar_url', url_for('static', filename='img/profile-placeholder.jpg')) }}"
+                                alt="Avatar" class="avatar-preview" id="avatarPreview">
                             <div class="avatar-edit">
                                 <input type="file" id="avatarInput" name="avatar" accept="image/*">
-                                <label for="avatarInput"><i class='bx bx-camera'></i></label>
+                                <label for="avatarInput" aria-label="Cambiar foto"><i class='bx bx-camera'></i></label>
                             </div>
                         </div>
                     </div>
@@ -312,107 +355,215 @@
                         <label for="editEmail" class="form-label">Correo Electrónico</label>
                         <input type="email" name="email" id="editEmail" class="form-control" value="{{ user['email'] }}"
                             required>
+                        <small class="form-text">Este es el correo que usas para iniciar sesión</small>
                     </div>
 
                     <div class="form-group">
                         <label for="editPhone" class="form-label">Teléfono</label>
                         <input type="tel" name="phone" id="editPhone" class="form-control"
-                            placeholder="Ingresa tu número de teléfono">
+                            value="{{ user.get('phone', '') }}" placeholder="Ej: +34 123 456 789">
                     </div>
 
                     <div class="form-group">
                         <label for="editBio" class="form-label">Biografía</label>
                         <textarea id="editBio" name="bio" class="form-control" rows="3"
-                            placeholder="Cuéntanos algo sobre ti"></textarea>
+                            placeholder="Cuéntanos algo sobre ti">{{ user.get('bio', '') }}</textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block">Guardar Cambios</button>
+                    <div class="form-group">
+                        <label class="form-label">Preferencias de notificación</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="email_notifications"
+                                id="emailNotifications" {{ 'checked' if user.get('email_notifications', True) }}>
+                            <label class="form-check-label" for="emailNotifications">
+                                Recibir notificaciones por correo
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="sms_notifications"
+                                id="smsNotifications" {{ 'checked' if user.get('sms_notifications', False) }}>
+                            <label class="form-check-label" for="smsNotifications">
+                                Recibir notificaciones por SMS
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class='bx bx-save'></i> Guardar Cambios
+                    </button>
                 </form>
             </div>
         </div>
     </div>
 
+    <!-- Boxicons JS -->
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <!-- AOS Animation -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // Initialize AOS animation
-        AOS.init({
-            duration: 800,
-            once: true
-        });
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize AOS animation
+            AOS.init({
+                duration: 800,
+                once: true
+            });
 
-        // Edit Profile Modal
-        const editModal = document.getElementById('editModal');
-        const editBtn = document.getElementById('editButton');
-        const closeEditModal = document.getElementById('closeEditModal');
+            // Edit Profile Modal
+            const editModal = document.getElementById('editModal');
+            const editBtn = document.getElementById('editButton');
+            const closeEditModal = document.getElementById('closeEditModal');
 
-        editBtn.addEventListener('click', () => {
-            editModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
+            // Function to open modal
+            function openModal() {
+                editModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                // Add a class to prevent background scrolling
+                document.body.classList.add('modal-open');
+            }
 
-        closeEditModal.addEventListener('click', () => {
-            editModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        // Close modal when clicking outside
-        editModal.addEventListener('click', (e) => {
-            if (e.target === editModal) {
+            // Function to close modal
+            function closeModal() {
                 editModal.style.display = 'none';
                 document.body.style.overflow = 'auto';
+                // Remove the class to re-enable scrolling
+                document.body.classList.remove('modal-open');
             }
-        });
 
-        // Avatar preview
-        const avatarInput = document.getElementById('avatarInput');
-        const avatarPreview = document.getElementById('avatarPreview');
+            // Event listeners
+            editBtn?.addEventListener('click', openModal);
+            closeEditModal?.addEventListener('click', closeModal);
 
-        avatarInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    avatarPreview.src = event.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+            // Close modal when clicking outside
+            editModal?.addEventListener('click', (e) => {
+                if (e.target === editModal) {
+                    closeModal();
+                }
+            });
 
-        // Reservation actions
-        document.querySelectorAll('.action-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const action = btn.querySelector('i').className;
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && editModal.style.display === 'flex') {
+                    closeModal();
+                }
+            });
 
-                if (action.includes('bx-trash')) {
-                    if (confirm('¿Estás seguro de que quieres cancelar esta reserva?')) {
-                        btn.closest('.reservation-card').style.opacity = '0';
-                        setTimeout(() => {
-                            btn.closest('.reservation-card').remove();
-                        }, 300);
+            // Avatar preview functionality
+            const avatarInput = document.getElementById('avatarInput');
+            const avatarPreview = document.getElementById('avatarPreview');
+
+            if (avatarInput && avatarPreview) {
+                avatarInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                            alert('El archivo es demasiado grande. Por favor, selecciona una imagen menor a 2MB.');
+                            return;
+                        }
+
+                        const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                        if (!validTypes.includes(file.type)) {
+                            alert('Por favor, selecciona un archivo de imagen válido (JPEG, PNG o GIF).');
+                            return;
+                        }
+
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            avatarPreview.src = event.target.result;
+                        };
+                        reader.readAsDataURL(file);
                     }
-                } else if (action.includes('bx-download')) {
-                    alert('Descargando ticket...');
-                }
-            });
-        });
+                });
+            }
 
-        // Favorite button toggle
-        document.querySelectorAll('.favorite-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                btn.innerHTML = btn.innerHTML.includes('bxs-heart') ?
-                    '<i class="bx bx-heart"></i>' : '<i class="bx bxs-heart"></i>';
+            // Form submission handling
+            const editForm = document.querySelector('#editModal form');
+            if (editForm) {
+                editForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
 
-                const item = btn.closest('.favorite-item');
-                if (btn.innerHTML.includes('bx-heart')) {
-                    item.style.transform = 'scale(0)';
+                    // Simulate form submission (replace with actual AJAX call)
+                    console.log('Form submitted');
+
+                    // Show loading state
+                    const submitBtn = editForm.querySelector('button[type="submit"]');
+                    const originalBtnText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="bx bx-loader bx-spin"></i> Guardando...';
+                    submitBtn.disabled = true;
+
+                    // Simulate API call
                     setTimeout(() => {
-                        item.remove();
-                    }, 300);
-                }
+                        // Restore button state
+                        submitBtn.innerHTML = originalBtnText;
+                        submitBtn.disabled = false;
+
+                        // Close modal and show success message
+                        closeModal();
+                        alert('Perfil actualizado correctamente');
+
+                        // Here you would typically update the page with new data
+                        // or reload the page if needed
+                    }, 1500);
+                });
+            }
+
+            // Botón para actualizar recomendaciones
+            document.getElementById('refresh-recommendations')?.addEventListener('click', function () {
+                fetch('/update_recommendations')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Recomendaciones actualizadas correctamente');
+                            location.reload(); // Recargar la página para ver los cambios
+                        } else {
+                            alert('Error al actualizar recomendaciones');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error al conectar con el servidor');
+                    });
             });
+
+            // Manejar botones de favoritos en las recomendaciones
+            document.querySelectorAll('.btn-favorite').forEach(button => {
+                button.addEventListener('click', function () {
+                    const eventId = this.dataset.eventId;
+                    toggleFavorite(eventId, this);
+                });
+            });
+
+            function toggleFavorite(eventId, button) {
+                fetch('/add_favorite', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `event_id=${eventId}`
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const icon = button.querySelector('i');
+                            if (data.action === 'added') {
+                                icon.classList.remove('bx-heart');
+                                icon.classList.add('bxs-heart');
+                                button.style.backgroundColor = '#e74c3c';
+                                button.style.color = 'white';
+                            } else {
+                                icon.classList.remove('bxs-heart');
+                                icon.classList.add('bx-heart');
+                                button.style.backgroundColor = 'var(--almond)';
+                                button.style.color = 'var(--black)';
+                            }
+                        } else {
+                            alert(data.message || 'Error al actualizar favoritos');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error al conectar con el servidor');
+                    });
+            }
         });
     </script>
 </body>

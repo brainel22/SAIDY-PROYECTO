@@ -115,30 +115,43 @@
     {% endwith %}
     <h1>Festivales</h1>
 
-    <!-- Agregar campo de búsqueda -->
-    <div id="userTableContainer">
-        <div class="container" id="userTable">
-            {% for dato in datos %}
-            <div class="card">
-                <img src="{{ dato.image_url }}" alt="" class="card-img">
-                <div class="card-content">
-                    <h2 class="card-title">{{ dato.name }}</h2>
-                    <p class="card-description">Categoria: {{ dato.category }}</p>
-                    <p class="card-description">Descripcion: {{ dato.description }}</p>
-                    <p class="card-description">Lugar: {{ dato.place }}</p>
-                    <p class="card-description">Fecha: {{ dato.event_date }} a las {{ dato.event_hour}}</p>
+<div id="userTableContainer">
+    <div class="container" id="userTable">
+        {% for dato in datos %}
+        <div class="card">
+            <div class="card-image-wrapper">
+                <img src="{{ dato.image_url }}" alt="{{ dato.name }}" class="card-img">
+                <div class="card-badge">{{ dato.category }}</div>
+            </div>
+            <div class="card-content">
+                <div class="card-date">
+                    <i class='bx bx-calendar'></i>
+                    {{ dato.event_date }} • {{ dato.event_hour}}
+                </div>
+                <h2 class="card-title">{{ dato.name }}</h2>
+                <p class="card-description">{{ dato.description }}</p>
 
-                    <p class="card-price">Precio: {{ dato.price }}</p>
+                <div class="card-details">
+                    <div class="card-place">
+                        <i class='bx bx-map'></i>
+                        {{ dato.place }}
+                    </div>
+                    <div class="card-price">${{ dato.price }}</div>
+                </div>
+
+                <div class="card-actions">
                     <a href="#" class="card-link favorite-btn" data-event-id="{{ dato.id }}">
-                        <i class='bx bx-heart nav__icon'></i> Favorito
+                        <i class='bx bx-heart'></i> Guardar
                     </a>
-                    <!-- Agregar enlace para guardar evento -->
-                    <a href="{{ url_for('reservar_evento', id=dato.id) }}" class="card-link">Reservar</a>
+                    <a href="{{ url_for('reservar_evento', id=dato.id) }}" class="card-link reserve-btn">
+                        Reservar
+                    </a>
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
+</div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="{{url_for('static', filename = 'js/events.js')}}"></script>

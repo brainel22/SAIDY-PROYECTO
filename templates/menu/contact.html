@@ -100,12 +100,25 @@
         </nav>
     </div>
 
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-messages">
+    {% for message in messages %}
+    <div class="flash-message alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close-btn" aria-label="Close">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
 <div class="contact-container">
     <header class="contact-header">
         <h1>Contacta con Empresa de Reservas</h1>
         <p>Envíanos tus preguntas y te responderemos lo antes posible.</p>
     </header>
-    <form action="{{url_for('contact')}}" method="POST" class="contact-form">
+    <form class="contact-form">
         <div class="form-group">
             <label for="name">Nombre:</label>
             <input type="text" id="name" name="name" required class="form-input">

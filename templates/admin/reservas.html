@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuarios</title>
+<link rel="icon" href="{{ url_for('static', filename='img/Boolings Reserves.png') }}" type="image/png">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
     <link rel="stylesheet" href="{{url_for ('static',filename = 'css/menu_admin.css')}}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
@@ -100,8 +102,8 @@
                             </div>
 
                         </div>
-
-                        <div class="nav__list">
+                        
+                                                <div class="nav__list">
                             <div class="nav__items">
                                 <h3 class="nav__subtitle">Reportes</h3>
                                 <a href="{{url_for('facturas')}}" class="nav__link">
@@ -110,6 +112,8 @@
                                 </a>
                             </div>
                         </div>
+                        
+
                     </div>
                 </div>
             </div>
@@ -151,9 +155,9 @@
             <td>{{ dato.date }}</td>
             <td>{{ dato.number_of_reserved_tickets }}</td>
             <td>
-                <button onclick="openModal('editUserModal{{ dato.id }}')">Editar</button>
+                <i class='bx bx-edit nav__icon' onclick="openModal('editUserModal{{ dato.id }}')" id="link-editar "></i>
                 <form action="/eliminar_reserva/{{ dato.id }}" method="post" class="form-eliminar" style="display: inline;">
-                    <button type="submit" class="btn-eliminar">Eliminar</button>
+                    <button type="submit" class="btn-eliminar"><i class='bx bx-trash nav__icon'></i></button>
                 </form>
             </td>
         </tr>

@@ -37,3 +37,5 @@ document.addEventListener("DOMContentLoaded", function () {
         inicioText.parentElement.style.opacity = 1;
     }, 100);
 });
+
+

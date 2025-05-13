@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href=" {{url_for('static',filename = 'css/login.css')}}">
     <link rel="icon" href="{{ url_for('static', filename='img/Boolings Reserves.png') }}" type="image/png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -32,10 +33,10 @@
                 </div>
                 <div id="input-area">
                     <div class="f-inp">
-                        <input type="email" name="email" placeholder="Email" required>
+                    <input type="email" name="email" placeholder="Email" required>
                     </div>
                     <div class="f-inp"> 
-                       <input type="password" name="password" placeholder="Password" required>
+                    <input type="password" name="password" placeholder="Password" required>
                     </div>
                 </div>
                 <div id="submit-button-cvr">
@@ -47,7 +48,6 @@
                 <div id="forgot-pass">
                         <a href="{{url_for('register')}}">No te haz registrado?</a>
                 </div>
-                <div id="bar"></div>
             </div>
         </form>
         <div id="img-box">

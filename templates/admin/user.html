@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuarios</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/add.css') }}">
+<link rel="icon" href="{{ url_for('static', filename='img/Boolings Reserves.png') }}" type="image/png">
 
     <link rel="stylesheet" href="{{url_for ('static',filename = 'css/menu_admin.css')}}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
@@ -103,7 +103,7 @@
     
                             </div>
     
-                            <div class="nav__list">
+                               <div class="nav__list">
                                 <div class="nav__items">
                                     <h3 class="nav__subtitle">Reportes</h3>
                                     <a href="{{url_for('facturas')}}" class="nav__link">
@@ -111,7 +111,9 @@
                                         <span class="nav__name">Reportes</span>
                                     </a>
                                 </div>
-                            </div>
+                            </div>                         
+    
+
                         </div>
                     </div>
                 </div>
@@ -163,14 +165,12 @@
     <table id="userTable">
 
         <tr>
-            <th>ID</th>
             <th>Nombre</th>
             <th>Correo</th>
             <th>Operación</th>
         </tr>
         {% for dato in datos %}
         <tr>
-            <td>{{ dato.id }}</td>
             <td>{{ dato.username }}</td>
             <td>{{ dato.email }}</td>
             <td>
